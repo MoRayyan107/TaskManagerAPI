@@ -16,9 +16,11 @@ class TaskTest {
     @Test
     void testGetters(){
         Task task = new Task("Finish Task manager API", "Something", false);
-        Assertions.assertEquals("Finish Task manager API", task.getTitle());
-        Assertions.assertEquals("Something", task.getDescription());
-        Assertions.assertFalse(task.isCompleted());
+        assertAll(
+        () -> assertEquals("Finish Task manager API", task.getTitle()),
+        () -> assertEquals("Something", task.getDescription()),
+        () -> assertFalse(task.isCompleted())
+        );
     }
 
     @Test
@@ -27,8 +29,10 @@ class TaskTest {
         task.setTitle("Study 208 Exam");
         task.setDescription("Need to get 70+ in exam");
         task.setCompleted(true); // will happen
-        Assertions.assertEquals("Study 208 Exam", task.getTitle());
-        Assertions.assertEquals("Need to get 70+ in exam", task.getDescription());
-        Assertions.assertTrue(task.isCompleted());
+        assertAll(
+                () -> assertEquals("Study 208 Exam", task.getTitle()),
+                () -> assertEquals("Need to get 70+ in exam", task.getDescription()),
+                () -> assertTrue(task.isCompleted())
+        );
     }
 }

@@ -6,8 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.hibernate.validator.constraints.NotBlank;
 
-
-@Entity // creates a table into local database (H2)
+@Entity // creates a table into a local database (H2)
 public class Task {
 
     @Id // marking this a primary key
@@ -33,6 +32,7 @@ public class Task {
     public boolean isCompleted() {return completed;}
 
     //setters
+    public void setID(Long id) {this.id = id;} // test usage
     public void setTitle(String Name) {title=Name;}
     public void setDescription(String Description) {description=Description;}
     public void setCompleted(boolean Completed) {completed=Completed;}

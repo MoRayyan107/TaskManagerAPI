@@ -43,7 +43,7 @@ The **Task Manager API** is a backend service built with **Java + Spring Boot** 
 1. Clone the repository
 2. Open in IntelliJ or your preferred IDE
 3. Run `TaskManagerApiApplication.java`
-4. Use Postman or curl to interact with the API on `http://localhost:8080`
+4. Use Postman or curl to interact with the API on `http://localhost:{portnumber}`
 
 ---
 

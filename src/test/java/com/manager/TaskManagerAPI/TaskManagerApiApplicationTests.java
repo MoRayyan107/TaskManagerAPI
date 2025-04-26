@@ -6,8 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TaskManagerApiApplicationTests {
 
-//	@Test
-//	void contextLoads() {
-//	}
+	@Test
+	void contextLoads() {
+        // automatically passes the main test
+	}
 
 }

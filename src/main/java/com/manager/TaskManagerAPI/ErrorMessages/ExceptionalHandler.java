@@ -9,7 +9,8 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.NoSuchElementException;
 
 /**
- * thi s class handles exceptions
+ * this class handles exceptions
+ * @author Mohammad Rayyan Adhoni
  */
 @ControllerAdvice // makes this an exception handling class
 public class ExceptionalHandler {

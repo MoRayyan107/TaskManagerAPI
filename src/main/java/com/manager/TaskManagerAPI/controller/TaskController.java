@@ -30,16 +30,91 @@ public class TaskController {
         return "Welcome to my custom Task Manager";
     }
 
-    @Autowired // Automatically injects dependencies
-    private TaskService service;
+    private final TaskService service;
+
+    /**
+     * Constructor Injection
+     * @param service managing the task service
+     */
+    @Autowired
+    public TaskController(TaskService service) {
+        this.service = service;
+    }
 
     /**
      * retrieves all the tasks
      * @return list of tasks
      */
     @GetMapping("/tasks")// maps GET requests
-    public List<Task> findAll() {
-        return service.getAllTasks();
+    public ResponseEntity<List<Task>> findAll() {
+        List<Task> getTask =  service.getAllTasks();
+        return new ResponseEntity<>(getTask, HttpStatus.OK);
+    }
+
+    /**
+     * retrieves tasks in ordered by title of the task
+     * @return sorted list of tasks by title
+     */
+    @GetMapping("/tasks/sortedByName")
+    public ResponseEntity<List<Task>> findAllByName() {
+        List<Task> sortedTasks =  service.getTasksBySort(Sort.by("title").descending());
+        return new ResponseEntity<>(sortedTasks, HttpStatus.OK);
+    }
+
+    /**
+     * retrieves tasks in pageable format
+     * @param pageable the pagination information
+     * @return paged list of tasks
+     */
+    @GetMapping("/tasks/page")
+    public ResponseEntity<Page<Task>> findAllByPage(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+        Page<Task> page =  service.getTasksPageable(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    /**
+     * creates a new tasks
+     * @param task task to create (needs to be a valid form)
+     * @return creates a task
+     */
+    @PostMapping("/tasks/create") // maps POST requests
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
+        Task createdTask = service.createTask(task);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    }
+
+    /**
+     * Updates the task based on ID
+     * @param id task id to update
+     * @param taskUpdate new task to replace with an old task based on id
+     * @return updated task wrapped around ResponseEntity
+     */
+    @PostMapping("/tasks/update/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskUpdate) {
+        Task task = service.updateTask(id, taskUpdate);
+        return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
+    /**
+     * Deletes a task based on ID
+     * @param id task ID to be deleted
+     * @return ResponseEntity giving us 200 OK or 404 NOT FOUND
+     */
+    @DeleteMapping("/tasks/delete/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        service.deleteTask(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * searches task based on title
+     * @param title name of the task to be searched
+     * @return list of task from title
+     */
+    @GetMapping("/tasks/search")
+    public ResponseEntity<List<Task>> searchTask(@RequestParam String title) {
+        List<Task> searchByTitle = service.searchByTitle(title);
+        return new ResponseEntity<>(searchByTitle, HttpStatus.OK);
     }
 
     /**
@@ -53,65 +128,4 @@ public class TaskController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    /**
-     * retrieves tasks in ordered by title of the task
-     * @return sorted list of tasks by title
-     */
-    @GetMapping("/tasks/sortedByName")
-    public List<Task> findAllByName() {
-        return service.getTasksBySort(Sort.by("title").descending());
-    }
-
-    /**
-     * retrieves tasks in pageable format
-     * @param pageable the pagination information
-     * @return paged list of tasks
-     */
-    @GetMapping("/tasks/pagedFormat")
-    public Page<Task> findAllByPage(@PageableDefault Pageable pageable) {
-        return service.getTasksPageable(pageable);
-    }
-
-    /**
-     * creates a new tasks
-     * @param task task to create (needs to be a valid form)
-     * @return creates a task
-     */
-    @PostMapping("/tasks") // maps POST requests
-    public Task createTask(@Valid @RequestBody Task task) {
-        return service.createTask(task);
-    }
-
-    /**
-     * Updates the task based on ID
-     * @param id task id to update
-     * @param taskUpdate new task to replace with an old task based on id
-     * @return updated task wrapped around ResponseEntity
-     */
-    @PostMapping("/tasks/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskUpdate) {
-        Task task = service.updateTask(id, taskUpdate);
-        return new ResponseEntity<>(task, HttpStatus.OK);
-    }
-
-    /**
-     * Deletes a task based on ID
-     * @param id task ID to be deleted
-     * @return ResponseEntity giving us 200 OK or 404 NOT FOUND
-     */
-    @DeleteMapping("/tasks/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        service.deleteTask(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * searches task based on title
-     * @param title name of the task to be searched
-     * @return list of task from title
-     */
-    @GetMapping("/tasks/search")
-    public List<Task> searchTask(@RequestParam String title) {
-        return service.searchByTitle(title);
-    }
 }

@@ -142,8 +142,9 @@ class TaskControllerTest {
                 .thenReturn(List.of(task, task2));
 
         // act and assert
-        mock.perform(get("/tasks/sortedByName")
-                .contentType(MediaType.APPLICATION_JSON))
+        mock.perform(get("/tasks/sorted")
+                        .param("sort", "title")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(2),
@@ -159,11 +160,13 @@ class TaskControllerTest {
                 .thenReturn(List.of());
 
         // act and assert
-        mock.perform(get("/tasks/sortedByName")
+        mock.perform(get("/tasks/sorted")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(0)
                 );
     }
+
+
 }

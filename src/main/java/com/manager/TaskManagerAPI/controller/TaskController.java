@@ -4,6 +4,7 @@ import com.manager.TaskManagerAPI.model.Task;
 import com.manager.TaskManagerAPI.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -53,11 +54,12 @@ public class TaskController {
 
     /**
      * retrieves tasks in ordered by title of the task
+     * @param sortBy input of sorting wither by title, id or description of a task
      * @return sorted list of tasks by title
      */
-    @GetMapping("/tasks/sortedByName")
-    public ResponseEntity<List<Task>> findAllByName() {
-        List<Task> sortedTasks =  service.getTasksBySort(Sort.by("title").descending());
+    @GetMapping("/tasks/sorted")
+    public ResponseEntity<List<Task>> findAllSorted(@RequestParam(defaultValue = "title") String sortBy) {
+        List<Task> sortedTasks =  service.getTasksBySort(Sort.by(sortBy).descending());
         return new ResponseEntity<>(sortedTasks, HttpStatus.OK);
     }
 

@@ -156,14 +156,11 @@ class TaskControllerTest {
     void tsetSortTaskByTitle_Failure() throws Exception {
         // Arrange
         when(service.getTasksBySort(Sort.by("title").ascending()))
-                .thenThrow(new NoSuchElementException());
+                .thenReturn(List.of());
 
         // act and assert
         mock.perform(get("/tasks/sortedByName")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpectAll(
-                        status().isOk(),
-                        jsonPath("$.size()").value(0)
-                );
+                .andExpect(status().isNotFound());
     }
 }

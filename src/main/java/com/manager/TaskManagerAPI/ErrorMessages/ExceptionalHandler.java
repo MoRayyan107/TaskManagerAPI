@@ -31,7 +31,6 @@ public class ExceptionalHandler {
     }
 
     /**
-     *
      * @param e message from the exception
      * @param request HTTP request data
      * @return Response Entity of 500 Internal Server Error

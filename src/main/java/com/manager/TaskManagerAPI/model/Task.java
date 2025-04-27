@@ -31,6 +31,16 @@ public class Task {
     public String getDescription() {return description;}
     public boolean isCompleted() {return completed;}
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", completed=" + completed +
+                '}';
+    }
+
     //setters
     public void setID(Long id) {this.id = id;} // test usage
     public void setTitle(String Name) {title=Name;}

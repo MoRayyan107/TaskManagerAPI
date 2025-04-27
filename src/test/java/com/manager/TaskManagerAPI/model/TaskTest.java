@@ -7,24 +7,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
+    private Task task;
     @BeforeEach
     void setUp() {
-        Task task = new Task();
+        task = new Task("Finish Task manager API", "Something", false);
+        task.setID(1L);
     }
 
     @Test
     void testGetters(){
-        Task task = new Task("Finish Task manager API", "Something", false);
+        String expectedString = """
+                Task{id=1, title='Finish Task manager API', description='Something', completed=false}
+                """.trim();
         assertAll(
         () -> assertEquals("Finish Task manager API", task.getTitle()),
         () -> assertEquals("Something", task.getDescription()),
-        () -> assertFalse(task.isCompleted())
+        () -> assertFalse(task.isCompleted()),
+        () -> assertEquals(expectedString, task.toString())
         );
     }
 
     @Test
     void testSetters(){
-        Task task = new Task("Finish Task manager API", "Something", false);
         task.setTitle("Study 208 Exam");
         task.setDescription("Need to get 70+ in exam");
         task.setCompleted(true); // will happen

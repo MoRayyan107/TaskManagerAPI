@@ -161,6 +161,9 @@ class TaskControllerTest {
         // act and assert
         mock.perform(get("/tasks/sortedByName")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.size()").value(0)
+                );
     }
 }

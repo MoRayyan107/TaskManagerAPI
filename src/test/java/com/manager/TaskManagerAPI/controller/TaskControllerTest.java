@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -124,6 +125,7 @@ class TaskControllerTest {
 
     @Test
     void testGetTaskById_Failure() throws Exception {
+        // Arrange
         when(service.getTaskById(4L))
                 .thenThrow(new NoSuchElementException());
 
@@ -131,5 +133,37 @@ class TaskControllerTest {
         mock.perform(get("/tasks/{id}",4L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void tsetSortTaskByTitle_Success() throws Exception {
+        // Arrange
+        when(service.getTasksBySort(Sort.by("title").descending()))
+                .thenReturn(List.of(task, task2));
+
+        // act and assert
+        mock.perform(get("/tasks/sortedByName")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.size()").value(2),
+                        jsonPath("$[0].title").value("Some Random Task"),
+                        jsonPath("$[1].title").value("Some Random Task2")
+                );
+    }
+
+    @Test
+    void tsetSortTaskByTitle_Failure() throws Exception {
+        // Arrange
+        when(service.getTasksBySort(Sort.by("title").ascending()))
+                .thenThrow(new NoSuchElementException());
+
+        // act and assert
+        mock.perform(get("/tasks/sortedByName")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.size()").value(0)
+                );
     }
 }

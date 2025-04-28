@@ -4,7 +4,6 @@ import com.manager.TaskManagerAPI.model.Task;
 import com.manager.TaskManagerAPI.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,6 +49,12 @@ public class TaskController {
     public ResponseEntity<List<Task>> findAll() {
         List<Task> getTask =  service.getAllTasks();
         return new ResponseEntity<>(getTask, HttpStatus.OK);
+    }
+
+    @GetMapping("/tasks/priority")
+    public ResponseEntity<List<Task>> findAllByPriority(@RequestParam Task.Priority priority) {
+        List<Task> tasks = service.getTaskPriority(priority);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     /**

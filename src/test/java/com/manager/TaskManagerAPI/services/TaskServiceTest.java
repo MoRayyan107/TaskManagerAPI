@@ -29,7 +29,7 @@ class TaskServiceTest {
     @Test
     void testToCreateTask() {
         // arrange
-        Task task = new Task("task1 ", "Some description", false);
+        Task task = new Task("task1 ", "Some description", false, Task.Priority.HIGH);
         when(taskRepository.save(task)).thenReturn(task);
 
         // act
@@ -37,6 +37,7 @@ class TaskServiceTest {
         assertNotNull(result);
         assertEquals("Some description", result.getDescription());
         assertEquals("task1 ", result.getTitle());
+        assertEquals(Task.Priority.HIGH, result.getPriority());
         assertFalse(result.isCompleted());
 
         // verify
@@ -46,8 +47,8 @@ class TaskServiceTest {
     @Test
     void testToGetAllTasks() {
         // arrange
-        Task task1 = new Task("Task 1", "Description 1", true);
-        Task task2 = new Task("Task 2", "Description 2", false);
+        Task task1 = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
+        Task task2 = new Task("Task 2", "Description 2", false, Task.Priority.LOW);
         when(taskRepository.findAll()).thenReturn(Arrays.asList(task1, task2));
 
         // act
@@ -60,9 +61,9 @@ class TaskServiceTest {
     @Test
     void testGetTaskInSorted(){
         // Arrange
-        Task task1 = new Task("Task 2", "Description 1", true);
-        Task task2 = new Task("Task 6", "Description 2", false);
-        Task task3 = new Task("Task 4", "Description 3", false);
+        Task task1 = new Task("Task 2", "Description 1", true, Task.Priority.HIGH);
+        Task task2 = new Task("Task 6", "Description 2", false, Task.Priority.MEDIUM);
+        Task task3 = new Task("Task 4", "Description 3", false, Task.Priority.LOW);
         when(taskRepository.findAll(Sort.by("title").ascending()))
                 .thenReturn(Arrays.asList(task1, task3, task2));
 
@@ -72,7 +73,7 @@ class TaskServiceTest {
                 () -> assertEquals(3, result.size()),
                 () -> assertEquals(task1 , result.getFirst()),
                 () -> assertEquals(task2 , result.getLast()),
-                () -> assertEquals(task3 , result.get(1)) // mid value of list
+                () -> assertEquals(task3 , result.get(1)) // mid-value of a list
         );
 
         // verify
@@ -82,7 +83,7 @@ class TaskServiceTest {
     @Test
     void testGetTaskById_Success() {
         // Arrange
-        Task task1 = new Task("Task 1", "Description 1", true);
+        Task task1 = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
         task1.setID(1L); //L as prefix for long data type
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task1));
 
@@ -110,8 +111,8 @@ class TaskServiceTest {
     @Test
     void testGetTaskByTitle_Success() {
         // Arrange
-        Task task1 = new Task("Task 1", "Description 1", true);
-        when(taskRepository.findByTitleContainingIgnoreCase("Task 1")).thenReturn(Arrays.asList(task1));
+        Task task1 = new Task("Task 1", "Description 1", true,Task.Priority.LOW);
+        when(taskRepository.findByTitleContainingIgnoreCase("Task 1")).thenReturn(List.of(task1));
         List<Task> result = service.searchByTitle("Task 1");
 
         // act
@@ -138,9 +139,9 @@ class TaskServiceTest {
     void testUpdateTask_Success() {
         // Arrange
         Long id = 1L;
-        Task existing = new Task("Task 1", "Description 1", true);
-        Task putUpdate = new Task("Task 2", "Description 2", false);
-        Task expected = new Task("Task 2", "Description 2", false);
+        Task existing = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
+        Task putUpdate = new Task("Task 2", "Description 2", false, Task.Priority.LOW);
+        Task expected = new Task("Task 2", "Description 2", false, Task.Priority.MEDIUM);
         existing.setID(id);
         expected.setID(id);
         when(taskRepository.findById(id)).thenReturn(Optional.of(existing));
@@ -165,7 +166,7 @@ class TaskServiceTest {
     void testUpdateTask_NotFound() {
         // Arrange
         Long id = 1L;
-        Task existingTask = new Task("Task 1", "Description 1", true);
+        Task existingTask = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
         existingTask.setID(id);
         when(taskRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> service.updateTask(id, existingTask));
@@ -175,7 +176,7 @@ class TaskServiceTest {
     void testDeleteTask_Success() {
         // Arrange
         Long id = 1L;
-        Task existing = new Task("Task 1", "Description 1", true);
+        Task existing = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
         existing.setID(id);
         when(taskRepository.findById(id)).thenReturn(Optional.of(existing));
 

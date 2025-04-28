@@ -1,12 +1,8 @@
 package com.manager.TaskManagerAPI.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
 
 @Entity // creates a table into a local database (H2)
 public class Task {
@@ -23,18 +19,26 @@ public class Task {
     private String description;
     private boolean completed;
 
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
     // constructor
     public Task() {}
-    public Task(String title, String description, boolean completed) {
+    public Task(String title, String description, boolean completed, Priority priority) {
         this.title = title;
         this.description = description;
         this.completed = completed;
+        this.priority = priority;
+    }
+    public enum Priority{
+        HIGH, MEDIUM, LOW
     }
     // getters
     public Long getID() {return id;}
     public String getTitle() {return title;}
     public String getDescription() {return description;}
     public boolean isCompleted() {return completed;}
+    public Priority getPriority() {return priority;}
 
     @Override
     public String toString() {
@@ -51,6 +55,7 @@ public class Task {
     public void setTitle(String Name) {title=Name;}
     public void setDescription(String Description) {description=Description;}
     public void setCompleted(boolean Completed) {completed=Completed;}
+    public void setPriority(Priority Priority) {priority=Priority;}
 
 }
 

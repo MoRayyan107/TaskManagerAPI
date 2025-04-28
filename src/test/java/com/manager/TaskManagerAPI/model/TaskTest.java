@@ -10,7 +10,7 @@ class TaskTest {
     private Task task;
     @BeforeEach
     void setUp() {
-        task = new Task("Finish Task manager API", "Something", false);
+        task = new Task("Finish Task manager API", "Something", false, Task.Priority.HIGH);
         task.setID(1L);
     }
 
@@ -18,10 +18,11 @@ class TaskTest {
     void testGetters(){
         String expectedString = task.toString();
         assertAll(
-        () -> assertEquals("Finish Task manager API", task.getTitle()),
-        () -> assertEquals("Something", task.getDescription()),
-        () -> assertFalse(task.isCompleted()),
-        () -> assertEquals(expectedString, task.toString())
+                () -> assertEquals("Finish Task manager API", task.getTitle()),
+                () -> assertEquals("Something", task.getDescription()),
+                () -> assertFalse(task.isCompleted()),
+                () -> assertEquals(expectedString, task.toString()),
+                () -> assertEquals(Task.Priority.HIGH, task.getPriority())
         );
     }
 

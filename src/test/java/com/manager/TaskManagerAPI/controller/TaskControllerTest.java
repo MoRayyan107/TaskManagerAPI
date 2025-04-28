@@ -35,8 +35,8 @@ class TaskControllerTest {
 
     @BeforeEach
     void setUp() {
-        task = new Task("Some Random Task","Description",false);
-        task2 = new Task("Some Random Task2","Description2",false);
+        task = new Task("Some Random Task","Description",false,Task.Priority.LOW);
+        task2 = new Task("Some Random Task2","Description2",false, Task.Priority.HIGH);
         task.setID(1L);
         task2.setID(2L);
     }
@@ -236,7 +236,10 @@ class TaskControllerTest {
     @Test
     void testUpdatingTask_Success() throws Exception {
         // Arrange
-        Task updatingTask = new Task("CS208 Exam","Done Well maybe 44/60",true);
+        Task updatingTask = new Task(
+                "CS208 Exam",
+                "Done Well maybe 44/60",
+                true,Task.Priority.HIGH);
         when(service.updateTask(eq(1L), any(Task.class))).thenReturn(updatingTask);
 
         // act and assert
@@ -260,7 +263,7 @@ class TaskControllerTest {
     @Test
     void testUpdatingTask_Failure() throws Exception {
         // Arrange
-        Task updatingTask = new Task("CS208 Exam","Done Well maybe 44/60",true);
+        Task updatingTask = new Task("CS208 Exam","Done Well maybe 44/60",true,Task.Priority.HIGH);
         when(service.updateTask(eq(1L), any(Task.class)))
                 .thenThrow(new NoSuchElementException());
 

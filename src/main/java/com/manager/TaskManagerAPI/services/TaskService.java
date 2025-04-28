@@ -62,6 +62,15 @@ public class TaskService {
     }
 
     /**
+     * gets the task based on priority
+     * @param priority Enum of either High Low or Medium
+     * @return list opf task based on the highest priority
+     */
+    public List<Task> getTaskPriority(Task.Priority priority) {
+        return taskRepository.getTaskByPriority(priority);
+    }
+
+    /**
      * gets task by ID
      * @param id to to search by task ID
      * @return task of the given task ID
@@ -96,6 +105,7 @@ public class TaskService {
                     existingTask.setTitle(newTask.getTitle());
                     existingTask.setDescription(newTask.getDescription());
                     existingTask.setCompleted(newTask.isCompleted());
+                    existingTask.setPriority(newTask.getPriority());
                     return taskRepository.save(existingTask);
                 }).orElseThrow(() -> new NoSuchElementException("Task not found for ID: "+id));
     }

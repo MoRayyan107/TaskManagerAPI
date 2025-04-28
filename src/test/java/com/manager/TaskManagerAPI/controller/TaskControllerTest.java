@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -138,7 +139,7 @@ class TaskControllerTest {
     @Test
     void tsetSortTaskByTitle_Success() throws Exception {
         // Arrange
-        when(service.getTasksBySort(Sort.by("title").descending()))
+        when(service.getTasksBySort(Sort.by("title").ascending()))
                 .thenReturn(List.of(task, task2));
 
         // act and assert
@@ -166,6 +167,28 @@ class TaskControllerTest {
                         status().isOk(),
                         jsonPath("$.size()").value(0)
                 );
+    }
+
+    @Test
+    void testDeleteTask_Success() throws Exception {
+        // Arrange
+        when(service.deleteTask(2L)).thenReturn(true);
+
+        // act and assert
+        mock.perform(delete("/tasks/delete/{id}",2L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testDeleteTask_Failure() throws Exception {
+        // Arrange
+        when(service.deleteTask(2L)).thenThrow(new NoSuchElementException());
+
+        // act and assert
+        mock.perform(delete("/tasks/delete/{id}",2L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 

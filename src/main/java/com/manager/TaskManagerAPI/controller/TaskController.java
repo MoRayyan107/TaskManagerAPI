@@ -59,7 +59,7 @@ public class TaskController {
      */
     @GetMapping("/tasks/sorted")
     public ResponseEntity<List<Task>> findAllSorted(@RequestParam(defaultValue = "title") String sortBy) {
-        List<Task> sortedTasks =  service.getTasksBySort(Sort.by(sortBy).descending());
+        List<Task> sortedTasks =  service.getTasksBySort(Sort.by(sortBy).ascending());
         return new ResponseEntity<>(sortedTasks, HttpStatus.OK);
     }
 

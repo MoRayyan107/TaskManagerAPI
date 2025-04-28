@@ -10,13 +10,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,7 +44,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void testGetAllTasksNonEmptyFile() throws Exception {
+    void testGetAllTasks_Success() throws Exception {
         // Arrange
         List<Task> expectedReturn = List.of(task, task2);
         when(service.getAllTasks()).thenReturn(expectedReturn);
@@ -59,10 +61,9 @@ class TaskControllerTest {
     }
 
     @Test
-    void testGetAllTasksEmptyFile() throws Exception {
+    void testGetAllTasks_EmptyList() throws Exception {
         // Arrange
-        List<Task> expectedReturn = List.of(); // expected an empty list of tasks
-        when(service.getAllTasks()).thenReturn(expectedReturn);
+        when(service.getAllTasks()).thenReturn(List.of());
 
         // act and assert
         mock.perform(get("/tasks")
@@ -93,7 +94,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void TestGetMappingUsingTitleOfTheTask_Failure() throws Exception {
+    void TestGetMappingUsingTitleOfTheTask_EmptyList() throws Exception {
         // Arrange
         when(service.searchByTitle("Non-existingTask"))
                 .thenReturn(List.of());
@@ -110,7 +111,7 @@ class TaskControllerTest {
     @Test
     void testGetTaskById_Success() throws Exception {
         // Arrange
-        when(service.getTaskById(2L))
+        when(service.getTaskById(eq(2L)))
                 .thenReturn(task2);
 
         // act and assert
@@ -127,7 +128,7 @@ class TaskControllerTest {
     @Test
     void testGetTaskById_Failure() throws Exception {
         // Arrange
-        when(service.getTaskById(4L))
+        when(service.getTaskById(eq(4L)))
                 .thenThrow(new NoSuchElementException());
 
         // act and assert
@@ -155,7 +156,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void tsetSortTaskByTitle_Failure() throws Exception {
+    void tsetSortTaskByTitle_EmptyList() throws Exception {
         // Arrange
         when(service.getTasksBySort(Sort.by("title").ascending()))
                 .thenReturn(List.of());
@@ -172,7 +173,7 @@ class TaskControllerTest {
     @Test
     void testDeleteTask_Success() throws Exception {
         // Arrange
-        when(service.deleteTask(2L)).thenReturn(true);
+        when(service.deleteTask(eq(2L))).thenReturn(true);
 
         // act and assert
         mock.perform(delete("/tasks/delete/{id}",2L)
@@ -183,13 +184,77 @@ class TaskControllerTest {
     @Test
     void testDeleteTask_Failure() throws Exception {
         // Arrange
-        when(service.deleteTask(2L)).thenThrow(new NoSuchElementException());
+        when(service.deleteTask(eq(2L))).thenThrow(new NoSuchElementException());
 
         // act and assert
         mock.perform(delete("/tasks/delete/{id}",2L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void testUpdatingTask_Success() throws Exception {
+        // Arrange
+        Task updatingTask = new Task("CS208 Exam","Done Well maybe 44/60",true);
+        when(service.updateTask(eq(1L), any(Task.class))).thenReturn(updatingTask);
+
+        // act and assert
+        mock.perform(post("/tasks/update/{id}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                        "title": "CS208 Exam",
+                        "description": "Done Well maybe 44/60",
+                        "completed": true
+                    }
+                    """))
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.title").value("CS208 Exam"),
+                        jsonPath("$.description").value("Done Well maybe 44/60"),
+                        jsonPath("$.completed").value(true)
+                );
+    }
+
+    @Test
+    void testUpdatingTask_Failure() throws Exception {
+        // Arrange
+        Task updatingTask = new Task("CS208 Exam","Done Well maybe 44/60",true);
+        when(service.updateTask(eq(1L), any(Task.class)))
+                .thenThrow(new NoSuchElementException());
+
+        // act and arrange
+        mock.perform(post("/tasks/update/{id}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                        "title": "CS208 Exam",
+                        "description": "Done Well maybe 44/60",
+                        "completed": true
+                    }
+                    """))
+                .andExpect(status().isNotFound());
+    }
+
+//    @Test
+//    void testUpdateTask_Failure_InvalidData() throws Exception {
+//        // Arrange
+//        Task invalidData = new Task("CS208 Exam",null,true);
+//        when(service.updateTask(eq(1L), any(Task.class)))
+//                .thenThrow(new MethodArgumentNotValidException(null,null));
+//
+//        // act and arrange
+//        mock.perform(post("/tasks/update/{id}",1L)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("""
+//                    {
+//                        "title": "CS208 Exam",
+//                        "description": null,
+//                        "completed": true
+//                    }
+//                    """))
+//                .andExpect(status().isBadRequest());
+//    }
 
 
 }

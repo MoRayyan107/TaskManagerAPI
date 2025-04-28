@@ -25,7 +25,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // list all tasks from title (case-sensitive)
     List<Task> findByTitleContainingIgnoreCase(String title);
 
-    //
+    // gets the list of task based on priority
     List<Task> getTaskByPriority(Task.Priority priority);
 
     // List all task in pagination format

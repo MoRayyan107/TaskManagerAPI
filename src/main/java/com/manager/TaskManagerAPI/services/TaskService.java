@@ -67,7 +67,11 @@ public class TaskService {
      * @return list opf task based on the highest priority
      */
     public List<Task> getTaskPriority(Task.Priority priority) {
-        return taskRepository.getTaskByPriority(priority);
+        List<Task> result = taskRepository.getTaskByPriority(priority);
+        if (result.isEmpty()) {
+            throw new NoSuchElementException("No task found with priority " + priority);
+        }
+        return result;
     }
 
     /**

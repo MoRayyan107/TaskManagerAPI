@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,8 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(controllers = TaskController.class)
@@ -41,6 +39,49 @@ class TaskControllerTest {
         task2 = new Task("Some Random Task2","Description2",false);
         task.setID(1L);
         task2.setID(2L);
+    }
+
+    @Test
+    void testHome() throws Exception {
+        // assert to get the header of this API
+        mock.perform(get("/"))
+                .andExpectAll(
+                        status().isOk(),
+                        content().string("Welcome to my custom Task Manager")
+                );
+    }
+
+    @Test
+    void testCreateTask_Success() throws Exception {
+        // Arrange
+        when(service.createTask(any(Task.class))).thenReturn(task);
+
+        // act and assert
+        mock.perform(post("/tasks/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(task.toString()))
+                .andExpectAll(
+                        status().isCreated(),
+                        jsonPath("$.title").value("Some Random Task")
+                );
+    }
+
+    @Test
+    void testCreateTask_NullValues() throws Exception {
+        // arrange
+        String invalidTaskJson = """
+                {
+                    \"title\": null, 
+                    \"description\": \"Something\", 
+                    \"completed\": false
+                }
+                """;
+
+        //act and assert
+        mock.perform(post("/tasks/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidTaskJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -238,23 +279,16 @@ class TaskControllerTest {
 
 //    @Test
 //    void testUpdateTask_Failure_InvalidData() throws Exception {
-//        // Arrange
-//        Task invalidData = new Task("CS208 Exam",null,true);
-//        when(service.updateTask(eq(1L), any(Task.class)))
-//                .thenThrow(new MethodArgumentNotValidException(null,null));
-//
 //        // act and arrange
 //        mock.perform(post("/tasks/update/{id}",1L)
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .content("""
-//                    {
-//                        "title": "CS208 Exam",
-//                        "description": null,
-//                        "completed": true
-//                    }
-//                    """))
+//                {
+//                    "title": null,
+//                    "description": "Something",
+//                    "completed": false
+//                }
+//                """))
 //                .andExpect(status().isBadRequest());
 //    }
-
-
 }

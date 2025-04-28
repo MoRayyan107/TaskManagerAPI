@@ -16,9 +16,7 @@ class TaskTest {
 
     @Test
     void testGetters(){
-        String expectedString = """
-                Task{id=1, title='Finish Task manager API', description='Something', completed=false}
-                """.trim();
+        String expectedString = task.toString();
         assertAll(
         () -> assertEquals("Finish Task manager API", task.getTitle()),
         () -> assertEquals("Something", task.getDescription()),

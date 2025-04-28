@@ -15,7 +15,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generates ID
     private Long id;
 
-    @NotBlank(message = "Title cannot be Empty")
+    @NotNull(message = "Title cannot be Empty")
     @Size(max = 100, message = "title must be less than 100 characters!")
     private String title;
 
@@ -38,12 +38,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", completed=" + completed +
-                '}';
+        return "{" +
+                "\"id\":" + id + "," +
+                "\"title\":\"" + title + "\"," +
+                "\"description\":\"" + description + "\"," +
+                "\"completed\":" + completed +
+                "}";
     }
 
     //setters

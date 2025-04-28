@@ -2,6 +2,8 @@ package com.manager.TaskManagerAPI.ErrorMessages;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -43,5 +45,28 @@ public class ExceptionalHandler {
                 request.getDescription(false).replace("url=","")
         );
         return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handles Invalid parameters fro creation or updating a task
+     * @param e message from the exception
+     * @param request HTTP request data
+     * @return Response Entity with Bad Request Error
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomErrorMessages> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, WebRequest request) {
+        StringBuilder errorMessage = new StringBuilder("Invalid validation: ");
+        for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
+            errorMessage.append(fieldError.getField())
+                    .append(" : ")
+                    .append(fieldError.getDefaultMessage())
+                    .append("; ");
+        }
+        CustomErrorMessages err = new CustomErrorMessages(
+                errorMessage.toString(),
+                HttpStatus.BAD_REQUEST.value(),
+                request.getDescription(false).replace("url=","")
+        );
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 }

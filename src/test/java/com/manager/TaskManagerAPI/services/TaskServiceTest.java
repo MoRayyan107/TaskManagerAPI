@@ -82,7 +82,7 @@ class TaskServiceTest {
                 () -> assertEquals(3, result.size()),
                 () -> assertEquals(task1 , result.get(0)),
                 () -> assertEquals(task3 , result.get(1)), // mid-value of a list
-                () -> assertEquals(task2 , result.get(3))
+                () -> assertEquals(task2 , result.get(2))
         );
 
         // verify

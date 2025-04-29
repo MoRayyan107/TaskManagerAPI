@@ -4,7 +4,7 @@
 		"name": "TaskManager API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44376508",
-		"_collection_link": "https://mohammadrayyanadhoni.postman.co/workspace/77e054cf-2f05-422c-80a8-f178781b4af6/collection/44376508-22ecdb1e-9410-4613-955b-a548baf60033?action=share&source=collection_link&creator=44376508"
+		"_collection_link": "https://mohammadrayyanadhoni.postman.co/workspace/Mohammad-Rayyan-Adhoni's-Worksp~77e054cf-2f05-422c-80a8-f178781b4af6/collection/44376508-22ecdb1e-9410-4613-955b-a548baf60033?action=share&source=collection_link&creator=44376508"
 	},
 	"item": [
 		{
@@ -203,6 +203,22 @@
 						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all tasks based on priority",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get task by history",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -132,6 +132,8 @@ class TaskControllerTest {
                         jsonPath("$[0].description").value("Description"),
                         jsonPath("$[0].completed").value(false)
                 );
+
+        verify(service, times(1)).searchByTitle("Some");
     }
 
     @Test
@@ -236,6 +238,7 @@ class TaskControllerTest {
     @Test
     void testUpdatingTask_Success() throws Exception {
         // Arrange
+        // task = "Some Random Task","Description",false,Task.Priority.LOW
         Task updatingTask = new Task(
                 "CS208 Exam",
                 "Done Well maybe 44/60",
@@ -294,4 +297,5 @@ class TaskControllerTest {
 //                """))
 //                .andExpect(status().isBadRequest());
 //    }
+
 }

@@ -1,6 +1,8 @@
 package com.manager.TaskManagerAPI.services;
 
 import com.manager.TaskManagerAPI.model.Task;
+import com.manager.TaskManagerAPI.model.TaskHistory;
+import com.manager.TaskManagerAPI.repository.TaskHistoryRepository;
 import com.manager.TaskManagerAPI.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +20,9 @@ import static org.mockito.Mockito.*;
 class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
+
+    @Mock
+    private TaskHistoryRepository taskHistoryRepository;
 
     @InjectMocks
     private TaskService service;
@@ -73,7 +79,7 @@ class TaskServiceTest {
     @Test
     void testGetTaskInSorted(){
         // Arrange
-        when(taskRepository.findAll(Sort.by("title").ascending()))
+        when(taskRepository.findAll(eq(Sort.by("title").ascending())))
                 .thenReturn(List.of(task1, task3, task2));
 
         // act
@@ -146,26 +152,32 @@ class TaskServiceTest {
         // Arrange
         Long id = 1L;
         Task existing = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
-        Task putUpdate = new Task("Task 2", "Description 2", false, Task.Priority.MEDIUM);
         Task expected = new Task("Task 2", "Description 2", false, Task.Priority.MEDIUM);
         existing.setID(id);
         expected.setID(id);
         when(taskRepository.findById(eq(id))).thenReturn(Optional.of(existing));
-        when(taskRepository.save(existing)).thenReturn(expected); // should get the expected version
-        Task result = service.updateTask(id, putUpdate); // make update
+
+        // save the history of updated task
+        String changedAction = "Task Title changed to -> '" + expected.getTitle() + "'";
+        TaskHistory historyTask = new TaskHistory(existing,changedAction.trim(), LocalDateTime.now());
+        when(taskHistoryRepository.save(any(TaskHistory.class))).thenReturn(historyTask);
+
+        // ensure to return the updated task
+        when(taskRepository.save(any(Task.class))).thenReturn(expected);
+        Task result = service.updateTask(id, expected); // make update
 
         // act
         assertAll(
                 () -> assertFalse(result.isCompleted()),
                 () -> assertEquals("Task 2", result.getTitle()),
                 () -> assertEquals("Description 2", result.getDescription()),
-                () -> assertEquals(1, expected.getID()),
                 () -> assertEquals(Task.Priority.MEDIUM, result.getPriority())
         );
 
         // verify
         verify(taskRepository, times(1)).findById(id);
         verify(taskRepository, times(1)).save(existing);
+        verify(taskHistoryRepository, times(1)).save(any(TaskHistory.class));
 
     }
 
@@ -214,7 +226,7 @@ class TaskServiceTest {
     @Test
     void testGetTaskByPriority_Success() {
         // Arrange
-        when(taskRepository.getTaskByPriority(Task.Priority.LOW)).thenReturn(List.of(task2,task3));
+        when(taskRepository.getTaskByPriority(eq(Task.Priority.LOW))).thenReturn(List.of(task2,task3));
         List<Task> result = service.getTaskPriority(Task.Priority.LOW);
 
         // assert
@@ -231,8 +243,8 @@ class TaskServiceTest {
     @Test
     void testMultiplePriorities(){
         // arrange
-        when(taskRepository.getTaskByPriority(Task.Priority.HIGH)).thenReturn(List.of(task,task1));
-        when(taskRepository.getTaskByPriority(Task.Priority.MEDIUM)).thenReturn(List.of(task4));
+        when(taskRepository.getTaskByPriority(eq(Task.Priority.HIGH))).thenReturn(List.of(task,task1));
+        when(taskRepository.getTaskByPriority(eq(Task.Priority.MEDIUM))).thenReturn(List.of(task4));
 
         List<Task> priorityHigh = service.getTaskPriority(Task.Priority.HIGH);
         List<Task> priorityMedium = service.getTaskPriority(Task.Priority.MEDIUM);
@@ -240,10 +252,10 @@ class TaskServiceTest {
         // act
         assertAll(
                 () -> assertEquals(2, priorityHigh.size()),
-                () -> assertEquals(task, priorityHigh.get(0)),
+                () -> assertEquals(task, priorityHigh.getFirst()),
                 () -> assertEquals(task1, priorityHigh.get(1)),
                 () -> assertEquals(1, priorityMedium.size()),
-                () -> assertEquals(task4, priorityMedium.get(0))
+                () -> assertEquals(task4, priorityMedium.getFirst())
         );
 
         // verify
@@ -254,7 +266,7 @@ class TaskServiceTest {
     @Test
     void testGetTaskByPriority_NotFound() {
         // arrange
-        when(taskRepository.getTaskByPriority(Task.Priority.MEDIUM)).thenReturn(List.of());
+        when(taskRepository.getTaskByPriority(eq(Task.Priority.MEDIUM))).thenReturn(List.of());
 
         // act
         assertThrows(NoSuchElementException.class, () -> service.getTaskPriority(Task.Priority.MEDIUM));

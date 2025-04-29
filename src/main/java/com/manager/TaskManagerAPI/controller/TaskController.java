@@ -1,6 +1,7 @@
 package com.manager.TaskManagerAPI.controller;
 
 import com.manager.TaskManagerAPI.model.Task;
+import com.manager.TaskManagerAPI.model.TaskHistory;
 import com.manager.TaskManagerAPI.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,18 @@ public class TaskController {
     public ResponseEntity<Task> findById(@PathVariable Long id) {
         Task task = service.getTaskById(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
+    /**
+     * pageable format of task history
+     * @param pageable the pagination information
+     * @param id Task id to get the history
+     * @return page formated of a task
+     */
+    @GetMapping("/tasks/history/{id}/page")
+    public ResponseEntity<Page<TaskHistory>> taskHistoryPageable(@PageableDefault(page = 0, size = 10) Pageable pageable, @PathVariable Long id) {
+        Page<TaskHistory> pagedTaskHistory = service.getTaskHistory(pageable, id);
+        return new ResponseEntity<>(pagedTaskHistory, HttpStatus.OK);
     }
 
 }

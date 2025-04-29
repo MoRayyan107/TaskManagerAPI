@@ -1,6 +1,8 @@
 package com.manager.TaskManagerAPI.services;
 
 import com.manager.TaskManagerAPI.model.Task;
+import com.manager.TaskManagerAPI.model.TaskHistory;
+import com.manager.TaskManagerAPI.repository.TaskHistoryRepository;
 import com.manager.TaskManagerAPI.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,14 +19,16 @@ import java.util.NoSuchElementException;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskHistoryRepository taskHistoryRepository;
 
     /**
      * constructor injection
      * @param taskRepository repository to manage task data
      */
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, TaskHistoryRepository taskHistoryRepository) {
         this.taskRepository = taskRepository;
+        this.taskHistoryRepository = taskHistoryRepository;
     }
 
     /**
@@ -104,14 +109,38 @@ public class TaskService {
      * @return the updated task with new task
      */
     public Task updateTask(Long id, Task newTask) {
-        return taskRepository.findById(id).map(
-                existingTask -> {
-                    existingTask.setTitle(newTask.getTitle());
-                    existingTask.setDescription(newTask.getDescription());
-                    existingTask.setCompleted(newTask.isCompleted());
-                    existingTask.setPriority(newTask.getPriority());
-                    return taskRepository.save(existingTask);
-                }).orElseThrow(() -> new NoSuchElementException("Task not found for ID: "+id));
+        // get the task
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No task found for id:" + id));
+
+        // check which property is changed
+        StringBuilder changedAction  = new StringBuilder();
+        if (!existingTask.getTitle().equals(newTask.getTitle())){
+            changedAction.append("Task Title changed to -> '").append(newTask.getTitle()).append("', ");
+        }
+        if (!existingTask.getDescription().equals(newTask.getDescription())){
+            changedAction.append("Task Description changed to -> '").append(newTask.getDescription()).append("', ");
+        }
+        if (existingTask.getPriority() != newTask.getPriority()){
+            changedAction.append("Task Priority changed to -> '").append(newTask.getPriority()).append("', ");
+        }
+        if (existingTask.isCompleted() != newTask.isCompleted()){
+            changedAction.append("Task Completed changed to -> '").append(newTask.isCompleted()).append("'. ");
+        }
+
+        // log in the history of updated task
+        if (!changedAction.isEmpty()){
+            TaskHistory logHistory = new TaskHistory(existingTask,changedAction.toString(), LocalDateTime.now());
+            taskHistoryRepository.save(logHistory);
+        }
+
+        // update th task
+        existingTask.setTitle(newTask.getTitle());
+        existingTask.setDescription(newTask.getDescription());
+        existingTask.setCompleted(newTask.isCompleted());
+        existingTask.setPriority(newTask.getPriority());
+
+        return taskRepository.save(existingTask);
     }
 
     /**
@@ -125,6 +154,19 @@ public class TaskService {
                     taskRepository.delete(task);
                     return true;
                 }).orElseThrow(() -> new NoSuchElementException("Task not found for ID: "+id));
+    }
+
+    /**
+     * gets list of tasks on history basis
+     * @param id task id to get the history
+     * @return the pageable of history for a particular task
+     */
+    public Page<TaskHistory> getTaskHistory(Pageable pageable, Long id) {
+        Page<TaskHistory> taskHistoryList = taskHistoryRepository.findTaskHistoriesByTaskId(pageable, id);
+        if (taskHistoryList.isEmpty()){
+            throw new NoSuchElementException("No task history found for ID: "+id);
+        }
+        return taskHistoryList;
     }
 
 }

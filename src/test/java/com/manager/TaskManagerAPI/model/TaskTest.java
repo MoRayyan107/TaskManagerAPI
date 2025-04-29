@@ -31,10 +31,12 @@ class TaskTest {
         task.setTitle("Study 208 Exam");
         task.setDescription("Need to get 70+ in exam");
         task.setCompleted(true); // will happen
+        task.setPriority(Task.Priority.LOW);
         assertAll(
                 () -> assertEquals("Study 208 Exam", task.getTitle()),
                 () -> assertEquals("Need to get 70+ in exam", task.getDescription()),
-                () -> assertTrue(task.isCompleted())
+                () -> assertTrue(task.isCompleted()),
+                () -> assertEquals(Task.Priority.LOW, task.getPriority())
         );
     }
 }

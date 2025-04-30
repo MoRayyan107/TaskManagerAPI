@@ -11,7 +11,7 @@ class TaskTest {
     @BeforeEach
     void setUp() {
         task = new Task("Finish Task manager API", "Something", false, Task.Priority.HIGH);
-        task.setID(1L);
+        task.setId(1L);
     }
 
     @Test

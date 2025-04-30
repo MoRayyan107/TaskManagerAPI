@@ -13,6 +13,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * REST controller for handling user authentication requests.
+ * <p>
+ * Exposes a POST endpoint at /authenticate which accepts username and password,
+ * validates credentials, and returns a JWT token if authentication succeeds.
+ * <p>
+ * Works with Spring Security's AuthenticationManager and UserDetailsService
+ * to process login attempts and issue secure JWTs via JwtUtil.
+ */
 @RestController
 @RequestMapping
 public class AuthController {
@@ -41,10 +51,5 @@ public class AuthController {
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 
-//    @GetMapping("/authenticate")
-//    public ResponseEntity<String> wrongMethodFallback() {
-//        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-//                .body("Bruh, you hit me with a GET. Try a POST request 😎");
-//    }
 
 }

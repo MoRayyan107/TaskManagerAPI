@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.manager.TaskManagerAPI.constants.AppConstants.*;
+
 /**
  * REST controller for handling task-related operations.
  * @author Mohammad Rayyan
@@ -64,7 +66,7 @@ public class TaskController {
      * @return sorted list of tasks by title
      */
     @GetMapping("/tasks/sorted")
-    public ResponseEntity<List<Task>> findAllSorted(@RequestParam(defaultValue = "title") String sortBy) {
+    public ResponseEntity<List<Task>> findAllSorted(@RequestParam(defaultValue = DEFAULT_SORT_BY) String sortBy) {
         List<Task> sortedTasks =  service.getTasksBySort(Sort.by(sortBy).ascending());
         return new ResponseEntity<>(sortedTasks, HttpStatus.OK);
     }
@@ -75,7 +77,9 @@ public class TaskController {
      * @return paged list of tasks
      */
     @GetMapping("/tasks/page")
-    public ResponseEntity<Page<Task>> findAllByPage(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+    public ResponseEntity<Page<Task>> findAllByPage(@PageableDefault(
+            page = DEFAULT_PAGE_NUMBER, size = DEFAULT_PAGE_SIZE) Pageable pageable)
+    {
         Page<Task> page =  service.getTasksPageable(pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }

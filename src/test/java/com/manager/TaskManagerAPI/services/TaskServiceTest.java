@@ -40,11 +40,11 @@ class TaskServiceTest {
         task4 = new Task("Task 5", "Description 4", true, Task.Priority.MEDIUM);  // Additional task for testing
 
         // Set IDs for tasks if needed
-        task.setID(1L);
-        task1.setID(2L);
-        task2.setID(3L);
-        task3.setID(4L);
-        task4.setID(5L);
+        task.setId(1L);
+        task1.setId(2L);
+        task2.setId(3L);
+        task3.setId(4L);
+        task4.setId(5L);
     }
 
     @Test
@@ -101,7 +101,7 @@ class TaskServiceTest {
         when(taskRepository.findById(eq(1L))).thenReturn(Optional.of(task));
 
         // act
-        assertEquals(1, service.getTaskById(1L).getID());
+        assertEquals(1, service.getTaskById(1L).getId());
         Task result = service.getTaskById(1L);
         assertEquals(task, result);
 
@@ -153,8 +153,8 @@ class TaskServiceTest {
         Long id = 1L;
         Task existing = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
         Task expected = new Task("Task 2", "Description 2", false, Task.Priority.MEDIUM);
-        existing.setID(id);
-        expected.setID(id);
+        existing.setId(id);
+        expected.setId(id);
         when(taskRepository.findById(eq(id))).thenReturn(Optional.of(existing));
 
         // save the history of updated task
@@ -186,7 +186,7 @@ class TaskServiceTest {
         // Arrange
         Long id = 1L;
         Task existingTask = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
-        existingTask.setID(id);
+        existingTask.setId(id);
         when(taskRepository.findById(eq(id))).thenReturn(Optional.empty());
 
         // act
@@ -201,7 +201,7 @@ class TaskServiceTest {
         // Arrange
         Long id = 1L;
         Task existing = new Task("Task 1", "Description 1", true, Task.Priority.HIGH);
-        existing.setID(id);
+        existing.setId(id);
         when(taskRepository.findById(eq(id))).thenReturn(Optional.of(existing));
 
         // act

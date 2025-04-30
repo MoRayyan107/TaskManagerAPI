@@ -16,9 +16,9 @@ class TaskHistoryTest {
     @BeforeEach
     void setUp() {
         task = new Task("New Task","No Description",false,Task.Priority.LOW);
-        task.setID(1L);
+        task.setId(1L);
         taskToSet = new Task("Updated title","No Description",false,Task.Priority.LOW);
-        taskToSet.setID(1L);
+        taskToSet.setId(1L);
 
         fixedTime = LocalDateTime.of(2025,4,12,7,35);
         taskHistory = new TaskHistory(task,"new task added", fixedTime);
@@ -27,7 +27,7 @@ class TaskHistoryTest {
     @Test
     void testGetters() {
         assertAll(
-                () -> assertEquals(1, taskHistory.getTask().getID()),
+                () -> assertEquals(1, taskHistory.getTask().getId()),
                 () -> assertEquals(task, taskHistory.getTask()),
                 () -> assertEquals("new task added", taskHistory.getChangedAction()),
                 () -> assertEquals(fixedTime, taskHistory.getTime())

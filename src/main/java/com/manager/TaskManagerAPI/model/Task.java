@@ -34,7 +34,7 @@ public class Task {
         HIGH, MEDIUM, LOW
     }
     // getters
-    public Long getID() {return id;}
+    public Long getId() {return id;}
     public String getTitle() {return title;}
     public String getDescription() {return description;}
     public boolean isCompleted() {return completed;}
@@ -51,7 +51,7 @@ public class Task {
     }
 
     //setters
-    public void setID(Long id) {this.id = id;} // test usage
+    public void setId(Long id) {this.id = id;} // test usage
     public void setTitle(String Name) {title=Name;}
     public void setDescription(String Description) {description=Description;}
     public void setCompleted(boolean Completed) {completed=Completed;}

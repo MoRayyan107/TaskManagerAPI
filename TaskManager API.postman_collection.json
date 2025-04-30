@@ -103,6 +103,69 @@
 			"response": []
 		},
 		{
+			"name": "Search Task by Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/search?title=Meeting",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"search"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Meeting"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all tasks based on priority",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get task by history",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task By ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/delete/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"delete",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "create task",
 			"request": {
 				"method": "POST",
@@ -160,65 +223,58 @@
 			"response": []
 		},
 		{
-			"name": "Delete Task By ID",
+			"name": "authenticate correct Pssword",
 			"request": {
-				"method": "DELETE",
+				"method": "POST",
 				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/tasks/delete/3",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tasks",
-						"delete",
-						"3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Search Task by Name",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/tasks/search?title=Meeting",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tasks",
-						"search"
-					],
-					"query": [
-						{
-							"key": "title",
-							"value": "Meeting"
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"password\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authenticate"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "get all tasks based on priority",
+			"name": "authenticate Wrong Password",
 			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "get task by history",
-			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"gvhjdfshgujdsfhgjb\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authenticate"
+					]
+				}
 			},
 			"response": []
 		}

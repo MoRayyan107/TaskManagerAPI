@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form onsubmit="handleLogin(event)">
+            <label>Username:
+                <input type="text" id="username" required>
+            </label>
+            <label>Password:
+                <input type="password" id="password" required>
+            </label>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            console.log("Login running..."); // sanity check
+
+            const res = await fetch("/authenticate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: document.getElementById("username").value,
+                    password: document.getElementById("password").value
+                })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem("token", data.jwt);
+                window.location.href = "/task.html"; // make sure this matches your file name
+            } else {
+                alert("Invalid credentials, bro.");
+            }
+        }
+    </script>
+
+</body>
+</html>

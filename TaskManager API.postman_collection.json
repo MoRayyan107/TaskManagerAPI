@@ -9,9 +9,42 @@
 	"item": [
 		{
 			"name": "Get All Tasks",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTMyNywiaWF0IjoxNzQ2MDM5MzI3fQ.aSi0jB0Dij1mjFUUFL1PZDvGCDmx0VW7mrPRvCefi6Q",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTMyNywiaWF0IjoxNzQ2MDM5MzI3fQ.aSi0jB0Dij1mjFUUFL1PZDvGCDmx0VW7mrPRvCefi6Q",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:8080/tasks",
 					"protocol": "http",
@@ -29,6 +62,16 @@
 		{
 			"name": "Get Task By ID",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -49,6 +92,16 @@
 		{
 			"name": "Sorted Task by Title",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -75,6 +128,16 @@
 		{
 			"name": "Find Task By Paging",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -105,6 +168,16 @@
 		{
 			"name": "Search Task by Name",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -131,22 +204,84 @@
 		{
 			"name": "get all tasks based on priority",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/priority?priority=HIGH",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"priority"
+					],
+					"query": [
+						{
+							"key": "priority",
+							"value": "HIGH"
+						}
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "get task by history",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tasks/history/1/page",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"history",
+						"1",
+						"page"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Delete Task By ID",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
@@ -168,11 +303,32 @@
 		{
 			"name": "create task",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTMyNywiaWF0IjoxNzQ2MDM5MzI3fQ.aSi0jB0Dij1mjFUUFL1PZDvGCDmx0VW7mrPRvCefi6Q",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Task 1\",\r\n    \"description\": \"Some Description\",\r\n    \"completed\": false\r\n}",
+					"raw": "{\r\n  \"title\": \"Style login form\",\r\n  \"description\": \"Add padding and color tweaks\",\r\n  \"priority\": \"LOW\",\r\n  \"completed\": true\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -189,6 +345,13 @@
 					"path": [
 						"tasks",
 						"create"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTA4OSwiaWF0IjoxNzQ2MDM5MDg5fQ.OQYJUTbL670Ce0dY_dHLsH-1_lSVvovWCdM4UvoT4tQ\"",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -197,6 +360,16 @@
 		{
 			"name": "Update Task by ID",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"url": {

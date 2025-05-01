@@ -34,7 +34,6 @@ public class CustomerDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username.equals("admin")) {
-            logger.log(Level.INFO, "Trying to log in...");
             return new User("admin","{noop}password", List.of(new SimpleGrantedAuthority(ROLE_USER)));
         } else {
             logger.log(Level.INFO, "Incorrect username or password");

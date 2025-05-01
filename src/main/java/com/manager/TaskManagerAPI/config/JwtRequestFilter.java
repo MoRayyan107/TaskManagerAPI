@@ -17,6 +17,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.manager.TaskManagerAPI.constants.AppConstants.AUTH_HEADER;
+import static com.manager.TaskManagerAPI.constants.AppConstants.TOKEN_PREFIX;
+
 /**
  * Filter that intercepts every HTTP request to extract and validate a JWT token.
  * <p>
@@ -55,12 +58,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException
     {
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(AUTH_HEADER);
         logger.debug("Auth head: " + authHeader);
         String username = null;
         String jwt = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
             jwt = authHeader.substring(7); // remove teh 'Bearer ' token
             username = jwtUtil.extractUsername(jwt);
 
@@ -69,6 +72,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            logger.info("Trying to log in...");
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication =

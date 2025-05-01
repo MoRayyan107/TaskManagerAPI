@@ -4,8 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity // creates a table into a local database (H2)
 public class Task {
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TaskHistory> historyList;
 
     @Id // marking this a primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto generates ID

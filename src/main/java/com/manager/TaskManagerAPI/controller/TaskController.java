@@ -4,6 +4,8 @@ import com.manager.TaskManagerAPI.model.Task;
 import com.manager.TaskManagerAPI.model.TaskHistory;
 import com.manager.TaskManagerAPI.services.TaskService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,9 @@ import static com.manager.TaskManagerAPI.constants.AppConstants.*;
 @RestController
 public class TaskController {
 
+    private final TaskService service;
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+
     /**
      * Home route for displaying a message
      * @returns a string Welcome message
@@ -33,7 +38,6 @@ public class TaskController {
         return "Welcome to my custom Task Manager";
     }
 
-    private final TaskService service;
 
     /**
      * Constructor Injection
@@ -51,12 +55,14 @@ public class TaskController {
     @GetMapping("/tasks")// maps GET requests
     public ResponseEntity<List<Task>> findAll() {
         List<Task> getTask =  service.getAllTasks();
+        logger.info("Fetching all Tasks....");
         return new ResponseEntity<>(getTask, HttpStatus.OK);
     }
 
     @GetMapping("/tasks/priority")
     public ResponseEntity<List<Task>> findAllByPriority(@RequestParam Task.Priority priority) {
         List<Task> tasks = service.getTaskPriority(priority);
+        logger.info("Fetching Tasks based on priority: {}", priority);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -68,6 +74,7 @@ public class TaskController {
     @GetMapping("/tasks/sorted")
     public ResponseEntity<List<Task>> findAllSorted(@RequestParam(defaultValue = DEFAULT_SORT_BY) String sortBy) {
         List<Task> sortedTasks =  service.getTasksBySort(Sort.by(sortBy).ascending());
+        logger.info("Fetching Tasks based on sort by: {}", sortBy);
         return new ResponseEntity<>(sortedTasks, HttpStatus.OK);
     }
 
@@ -92,6 +99,7 @@ public class TaskController {
     @PostMapping("/tasks/create") // maps POST requests
     public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
         Task createdTask = service.createTask(task);
+        logger.info("Created Task: {}", createdTask);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
@@ -104,6 +112,7 @@ public class TaskController {
     @PostMapping("/tasks/update/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskUpdate) {
         Task task = service.updateTask(id, taskUpdate);
+        logger.info("Updated Task: {}", task);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
@@ -115,6 +124,7 @@ public class TaskController {
     @DeleteMapping("/tasks/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         service.deleteTask(id);
+        logger.info("Deleted Task: {}", id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -126,6 +136,7 @@ public class TaskController {
     @GetMapping("/tasks/search")
     public ResponseEntity<List<Task>> searchTask(@RequestParam String title) {
         List<Task> searchByTitle = service.searchByTitle(title);
+        logger.info("Fetching Tasks based on title: {}", title);
         return new ResponseEntity<>(searchByTitle, HttpStatus.OK);
     }
 
@@ -137,6 +148,7 @@ public class TaskController {
     @GetMapping("/tasks/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) {
         Task task = service.getTaskById(id);
+        logger.info("Fetching Task: {}", task);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 

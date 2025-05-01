@@ -19,7 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())  // disable the csrf configuration
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/authenticate","/login", "/task-page").permitAll()
+                        .requestMatchers("/", "/authenticate", "/login.html", "/task.html", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

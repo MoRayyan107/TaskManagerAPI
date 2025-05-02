@@ -1,33 +1,28 @@
 # 🗂️ Task Manager API
 
 ## 📌 Project Description
-A secure, modular **Java + Spring Boot** backend API to manage tasks with full **JWT-based authentication**,
-role-based route protection, and a dynamic frontend using **Mustache (Handlebars)**.
-
-Supports full **CRUD operations**, **pagination**, **task history logging**, and clean Spring Security integration.
+The Task Manager API is a secure, scalable backend service built with **Java + Spring Boot** that helps users manage their tasks with proper **authentication and authorization**.  
+This RESTful API supports **CRUD operations**, **pagination**, **task history logging**, and uses **JWT tokens** to protect routes.
 
 ---
 
 ## 🎯 Goals
 - Learn real-world backend development using Spring Boot
-- Implement and test secure JWT authentication
-- Build REST APIs with best practices (validation, pagination, error handling)
-- Write clean, maintainable code with SLF4J logging
-- Add a professional full-stack backend project to your portfolio
+- Understand and apply JWT authentication
+- Build and test secure REST APIs
+- Practice Spring Security, unit testing, and clean architecture
+- Add a professional project to your GitHub portfolio
 
 ---
 
 ## 🔐 Authentication
-- Spring Security 6+
-- Login via `/authenticate`
+- Uses Spring Security 6+
+- Secure login via `/authenticate` endpoint
 - Generates and validates JWT tokens
-- Secures all routes except `/login`, `/`, and `/authenticate`
-- Custom `JwtRequestFilter` handles every request
+- Protects all routes except `/authenticate`
 
-🧾 **Add token in header:**
-```
-Authorization: Bearer <your-token-here>
-```
+🧾 Add your token to headers:  
+`Authorization: Bearer <your-token-here>`
 
 ---
 
@@ -35,115 +30,89 @@ Authorization: Bearer <your-token-here>
 
 | Layer            | Technology             |
 |------------------|------------------------|
-| Language         | Java (17+ / 21)        |
-| Framework        | Spring Boot 3.4.4      |
+| Language         | Java (17+)             |
+| Framework        | Spring Boot            |
 | Database         | H2 (in-memory)         |
 | Auth & Security  | Spring Security + JWT  |
-| Frontend View    | Mustache (HBS style)   |
-| Styling          | HTML5 + CSS3           |
-| Testing          | JUnit + MockMvc        |
-| API Testing      | Postman                |
 | Build Tool       | Maven                  |
+| API Testing      | Postman / curl         |
+| IDE              | IntelliJ / VS Code     |
 
 ---
 
 ## 🚀 API Features
 - ✅ User Login + JWT Token
-- ✅ Create a task (via frontend or API)
-- ✅ Update a task (with task history logging)
-- ✅ List all tasks (pagination + sorting)
-- ✅ Mark task as completed
-- ✅ Delete a task
+- ✅ Create a task
+- ✅ Update a task (with task history tracking)
+- 📃 List all tasks (with pagination & sorting)
+- ✅ Mark a task as completed or incomplete
+- ❌ Delete a task
 - 📜 View task history logs by task ID
-- ✅ Styled Mustache frontend for task list & management
 
 ---
 
-## 🧪 Testing Status
-> ⚠️ Unit tests for `TaskController` are written but commented pending cleanup for Spring Boot 3.4 filter handling  
-> ✅ `@MockBean` approach is being refactored and re-integrated for compatibility
+## 🎨 Frontend UI
+The frontend is built using plain **HTML5 + CSS3**, served from the `/static` directory. The UI now includes:
+
+- 🧱 Grid layout: max 3 task cards per row
+- ✅ Each task is shown in a **card box** with:
+  - Title (heading)
+  - Description
+  - Priority badge
+  - Color-coded bottom bar for LOW / MEDIUM / HIGH
+- 🧰 Actions:
+  - “Mark Complete” / “Mark Incomplete”
+  - “Delete”
+- 🎨 Color Legend:
+  - 🔴 High = Red  
+  - 🟠 Medium = Orange  
+  - 🟢 Low = Green
+- 🌀 Auto-refresh after every update without scrolling to top
 
 ---
 
 ## 📦 Getting Started
 1. Clone the repository
-2. Open in IntelliJ / VS Code
+2. Open in IntelliJ or your preferred IDE
 3. Run `TaskManagerApiApplication.java`
-4. Access frontend at: [http://localhost:8080/task-page](http://localhost:8080/task-page)
-5. OR use Postman:
+4. Use Postman to:
+    - Send login request to `/authenticate`
+    - Use the returned JWT to access `/tasks`
 
 ---
 
-## 📬 Using Postman
+## 🔐 Example Auth Flow (Postman)
+1. **Login**
+    - POST `/authenticate`
+    - Body:
+   ```json
+   {
+     "username": "admin",
+     "password": "password"
+   }
+   ```
 
-### 🔐 1. Authenticate to Get JWT
-
-**Endpoint:**
-```
-POST /authenticate
-```
-
-**Body (raw, JSON):**
-```json
-{
-  "username": "admin",
-  "password": "password"
-}
-```
-
-**Headers:**
-```
-Content-Type: application/json
-```
-
-**Response Example:**
-```json
-{
-  "jwt": "eyJhbGciOiJIUzI1NiJ9..."
-}
-```
-
-### 🔑 2. Add Token to Headers
-```
-Authorization: Bearer <your_token_here>
-```
-
-### 🔧 3. Example: Create a Task
-
-**POST** `/tasks/create`  
-**Headers:**
-```
-Authorization: Bearer <your_token>
-Content-Type: application/json
-```
-
-**Body:**
-```json
-{
-  "title": "Test Postman",
-  "description": "Making sure Postman works",
-  "priority": "HIGH",
-  "completed": false
-}
-```
-
-### 📥 4. Get All Tasks
-**GET** `/tasks`  
-**Headers:**
-```
-Authorization: Bearer <your_token>
-```
-
-### 🔄 5. Update / Delete / Search / History
-- Update: `POST /tasks/update/{id}`
-- Delete: `DELETE /tasks/delete/{id}`
-- Search: `GET /tasks/search?title=task`
-- History: `GET /tasks/history/{id}`
+2. **Authorized Request**
+    - Add header: `Authorization: Bearer <jwt_token>`
+    - Access `/tasks`, `/tasks/create`, etc.
 
 ---
 
-## ✨ Future Plans
-- [ ] Add Swagger UI for API documentation
-- [ ] Finalize controller test coverage
-- [ ] Add user registration & DB-backed auth
-- [ ] Dockerize the project
+## ✨ Upcoming Features
+- [ ] Add inline **Edit** button per task (top-right of card)
+- [ ] Add pagination (limit 6–9 tasks per page)
+- [ ] Task history modal or viewer section
+- [ ] Toast/success messages for actions
+- [ ] Filter caching to reduce reload hits
+- [ ] Dockerize + Deploy-ready packaging
+
+---
+
+## 📂 Project Status
+🟢 Actively being developed  
+📅 Last updated: 2025-05-02
+
+---
+
+## 🙌 Credits
+Developed by **Mohammad Rayyan**

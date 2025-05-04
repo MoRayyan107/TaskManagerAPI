@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * this class handles exceptions
  * @author Mohammad Rayyan Adhoni
  */
-@ControllerAdvice // makes this an exception handling class
+//@ControllerAdvice // makes this an exception handling class
 public class ExceptionalHandler {
 
     /**

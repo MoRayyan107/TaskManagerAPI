@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
 @Service
 public class TaskService {
 
@@ -125,7 +124,8 @@ public class TaskService {
             changedAction.append("Task Priority changed to -> '").append(newTask.getPriority()).append("', ");
         }
         if (existingTask.isCompleted() != newTask.isCompleted()){
-            changedAction.append("Task Completed changed to -> '").append(newTask.isCompleted()).append("'. ");
+            String completed = (newTask.isCompleted()) ? "Yes" : "No";
+            changedAction.append("Task Completed changed to -> '").append(completed).append("'. ");
         }
 
         // log in the history of updated task
@@ -151,19 +151,24 @@ public class TaskService {
     public boolean deleteTask(Long id) {
         return taskRepository.findById(id)
                 .map(task -> {
+                    //  create a new history object and save it
+                    TaskHistory history = new TaskHistory(task,"Task Deleted",LocalDateTime.now());
+                    taskHistoryRepository.save(history);
+
+                    // successfully delete the task
                     taskRepository.delete(task);
                     return true;
                 }).orElseThrow(() -> new NoSuchElementException("Task not found for ID: "+id));
     }
 
     /**
-     * gets list of tasks on history basis
+     * gets a list of tasks on a history basis
      * @param id task id to get the history
      * @return the pageable of history for a particular task
      */
-    public Page<TaskHistory> getTaskHistory(Pageable pageable, Long id) {
-        Page<TaskHistory> taskHistoryList = taskHistoryRepository.findTaskHistoriesByTaskId(pageable, id);
-        if (taskHistoryList.isEmpty()){
+    public List<TaskHistory> getTaskHistory(Long id) {
+        List<TaskHistory> taskHistoryList = taskHistoryRepository.findTaskHistoriesByTaskId(id);
+        if (taskHistoryList.isEmpty() || taskHistoryList == null){
             throw new NoSuchElementException("No task history found for ID: "+id);
         }
         return taskHistoryList;

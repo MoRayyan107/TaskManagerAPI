@@ -10,7 +10,7 @@ public class AppConstants {
         // Prevent instantiation
     }
     // JWT Configuration
-    public static final String SECRET_KEY = "secret"; // In production, load from environment/config
+    public static final String SECRET_KEY = "YOUR_GENERATED_SECURE_KEY_HERE"; // In production, load from environment/config
     public static final long JWT_EXPIRATION = 1000 * 60 * 60 * 10; // 10 hours in milliseconds
 
     // HTTP Headers

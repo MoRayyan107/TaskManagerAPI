@@ -1,5 +1,8 @@
 package com.manager.TaskManagerAPI.services;
 
+import com.manager.TaskManagerAPI.model.AppUser;
+import com.manager.TaskManagerAPI.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,15 +32,16 @@ import java.util.logging.Logger;
 @Service
 public class CustomerDetailService implements UserDetailsService {
 
+    @Autowired
+    private UserRepository userRepository;
+
     private static final Logger logger = Logger.getLogger(CustomerDetailService.class.getName());
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.equals("admin")) {
-            return new User("admin","{noop}password", List.of(new SimpleGrantedAuthority(ROLE_USER)));
-        } else {
-            logger.log(Level.INFO, "Incorrect username or password");
-            throw new UsernameNotFoundException("Invalid username or password");
-        }
+        AppUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new User(user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority(ROLE_USER)));
     }
 }

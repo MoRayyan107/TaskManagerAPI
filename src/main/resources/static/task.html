@@ -10,6 +10,36 @@
     <h2>Welcome To Your Task Manager</h2>
     <button class="logout-btn" onclick="logout()">Logout</button>
 </header>
+<!-- Modal Overlay -->
+<div class="create-task-wrapper">
+    <button id="openFormBtn" class="center-btn"><b>+ Create Task</b></button>
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <span class="close-btn" id="closeFormBtn">×</span>
+            <h3 id="taskModalTitle">New Task</h3>
+            <form id="taskForm">
+                <input type="text" id="taskTitle" placeholder="Title (e.g. Fix Bug #404)" required />
+                <textarea id="taskDesc" placeholder="Description of the task..." required></textarea>
+                <select id="taskPriority">
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                </select>
+                <button type="submit" id="createTaskBtn">Create Task</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Task History -->
+<div id="historyModal" class="modal-overlay" style="display: none;">
+    <div class="modal-box-task-history">
+        <span class="close-btn" onclick="closeHistoryModal()">×</span>
+        <h3>Task History</h3>
+        <div id="historyContent" style="max-height: 370px; overflow-y: auto;"></div>
+    </div>
+</div>
 
 <div class="filters">
     <input type="text" id="searchInput" placeholder="🔍 Search tasks..." oninput="fetchTasks()">
@@ -19,22 +49,17 @@
         <option value="completed">Completion Status</option>
     </select>
 </div>
-
 <div class="legend">
     <span><span class="circle high"></span> High</span>
     <span><span class="circle medium"></span> Medium</span>
     <span><span class="circle low"></span> Low</span>
 </div>
-
-
 <h3 class="section-header">Active Tasks</h3>
 <div id="activeTasks" class="task-grid"></div>
-
 <h3 class="section-header">Completed Tasks</h3>
 <div id="completedTasks" class="task-grid"></div>
 
 <div id="toast"></div>
-
 <script>
     async function fetchTasks() {
         const token = localStorage.getItem("token");
@@ -42,29 +67,23 @@
             window.location.href = "/login.html";
             return;
         }
-
         const searchValue = document.getElementById("searchInput").value.toLowerCase();
         const sortBy = document.getElementById("sortSelect").value;
-        let url = "/tasks";
-
+        let url = "api/tasks/allTasks";
         if (sortBy === "priority" || sortBy === "completed") {
-            url = `/tasks/sorted?sort=${sortBy}`;
+            url = `api/tasks/sorted?sort=${sortBy}`;
         }
-
         const res = await fetch(url, {
             headers: { "Authorization": "Bearer " + token }
         });
-
         const active = document.getElementById("activeTasks");
         const completed = document.getElementById("completedTasks");
         active.innerHTML = "";
         completed.innerHTML = "";
-
         if (!res.ok) {
             alert("Error fetching tasks");
             return;
         }
-
         let tasks = await res.json();
         tasks = tasks.filter(task =>
             task.title.toLowerCase().includes(searchValue) ||
@@ -73,24 +92,32 @@
         );
 
         tasks.forEach(task => {
+            // main task card
             const card = document.createElement("div");
             card.classList.add("task-card");
-
             const content = document.createElement("div");
+
+            // edit btn to change its value
+            const editIcon = document.createElement("button");
+            editIcon.textContent = "Edit";
+            editIcon.classList.add("edit-btn");
+            editIcon.onclick = () => openEditModal(task);
+            card.appendChild(editIcon);
+
+            // task title with id (ex -> task title #1)
             content.classList.add("task-main");
-
             const title = document.createElement("h4");
-            title.textContent = task.title;
-
+            title.textContent = `${task.title} #${task.id}`;
             const desc = document.createElement("p");
-            desc.textContent = task.description;
 
+            // task description
+            desc.textContent = task.description;
             content.appendChild(title);
             content.appendChild(desc);
-
             const actions = document.createElement("div");
             actions.classList.add("task-actions");
 
+            // status btn (mark complete or not)
             const statusBtn = document.createElement("button");
             statusBtn.textContent = task.completed ? "Mark Incomplete" : "Mark Complete";
             statusBtn.onclick = () => updateTask(task.id, {
@@ -100,28 +127,32 @@
                 completed: !task.completed
             });
 
+            // delete btn
             const deleteBtn = document.createElement("button");
             deleteBtn.textContent = "Delete";
             deleteBtn.onclick = () => deleteTask(task.id);
-
             actions.appendChild(statusBtn);
             actions.appendChild(deleteBtn);
 
+            // history btn
+            const historyBtn = document.createElement("button");
+            historyBtn.textContent = "View History";
+            historyBtn.onclick = () => fetchHistory(task.id);
+            actions.appendChild(historyBtn);
+
+            // priority bar
             const footer = document.createElement("div");
             footer.classList.add("priority-bar");
             footer.classList.add(task.priority.toLowerCase());
-
             card.appendChild(content);
             card.appendChild(actions);
             card.appendChild(footer);
-
             (task.completed ? completed : active).appendChild(card);
         });
     }
-
     function updateTask(id, data) {
         const token = localStorage.getItem("token");
-        fetch(`/tasks/update/${id}`, {
+        fetch(`api/tasks/update/${id}`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + token,
@@ -130,18 +161,152 @@
             body: JSON.stringify(data)
         }).then(fetchTasks);
     }
-
     function deleteTask(id) {
         const token = localStorage.getItem("token");
-        fetch(`/tasks/delete/${id}`, {
+        fetch(`api/tasks/delete/${id}`, {
             method: "DELETE",
             headers: { "Authorization": "Bearer " + token }
         }).then(fetchTasks);
     }
-
     function logout() {
         localStorage.removeItem("token");
         window.location.href = "/login.html";
+    }
+    function openEditModal(task) {
+        document.getElementById("taskModalTitle").textContent = "Edit Task";
+        document.getElementById("taskTitle").value = task.title;
+        document.getElementById("taskDesc").value = task.description;
+        document.getElementById("taskPriority").value = task.priority;
+        document.getElementById("createTaskBtn").textContent = "Save Changes";
+        document.getElementById("taskForm").onsubmit = (e) => {
+            e.preventDefault();
+            updateTask(task.id, {
+                title: document.getElementById("taskTitle").value,
+                description: document.getElementById("taskDesc").value,
+                priority: document.getElementById("taskPriority").value,
+                completed: task.completed // stay same
+            });
+            closeTaskModal();
+        };
+        openTaskModal();
+    }
+    function openTaskModal() {
+        const modalOverlay = document.getElementById("modalOverlay");
+        modalOverlay.style.display = "flex";
+        document.getElementById("openFormBtn").style.display = "none";
+    }
+    function closeTaskModal() {
+        const modalOverlay = document.getElementById("modalOverlay");
+        modalOverlay.style.display = "none";
+        document.getElementById("openFormBtn").style.display = "inline-block";
+    }
+    const openFormBtn = document.getElementById("openFormBtn");
+    const closeFormBtn = document.getElementById("closeFormBtn");
+    const modalOverlay = document.getElementById("modalOverlay");
+    // creating the task when clicked
+    openFormBtn.onclick = () => {
+        document.getElementById("taskModalTitle").textContent = "New Task";
+        document.getElementById("createTaskBtn").textContent = "Create Task";
+        document.getElementById("taskForm").reset();
+
+        // Reset onsubmit handler to default (create task)
+        document.getElementById("taskForm").onsubmit = async function (e) {
+            e.preventDefault();
+            const token = localStorage.getItem("token");
+            const newTask = {
+                title: document.getElementById("taskTitle").value,
+                description: document.getElementById("taskDesc").value,
+                priority: document.getElementById("taskPriority").value,
+                completed: false
+            };
+            const res = await fetch("api/tasks/create", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newTask)
+            });
+            if (res.ok) {
+                modalOverlay.style.display = "none";
+                openFormBtn.style.display = "inline-block";
+                document.getElementById("taskForm").reset();
+                fetchTasks();
+            } else {
+                alert("Failed to create task.");
+            }
+        };
+        modalOverlay.style.display = "flex";
+        openFormBtn.style.display = "none";
+    };
+    closeFormBtn.onclick = () => {
+        modalOverlay.style.display = "none";
+        openFormBtn.style.display = "inline-block";
+    };
+    document.getElementById("taskForm").onsubmit = async function (e) {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const newTask = {
+            title: document.getElementById("taskTitle").value,
+            description: document.getElementById("taskDesc").value,
+            priority: document.getElementById("taskPriority").value,
+            completed: false
+        };
+        const res = await fetch("api/tasks/create", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newTask)
+        });
+        if (res.ok) {
+            modalOverlay.style.display = "none";
+            openFormBtn.style.display = "inline-block";
+            document.getElementById("taskForm").reset();
+            fetchTasks();
+        } else {
+            alert("Failed to create task.");
+        }
+    };
+    async function fetchHistory(taskId) {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`api/tasks/history/${taskId}`, {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        const historyContent = document.getElementById("historyContent");
+        historyContent.innerHTML = "";
+
+        if (!res.ok) {
+            const errorMessage = await res.text();  //get the error message
+            console.error("Error fetching task history:", errorMessage);
+            historyContent.innerHTML = "<p>Failed to retrieve history.</p>";
+            openHistoryModal();
+            return;
+        }
+
+        const data = await res.json();
+        console.log(data); // <-- Add this line to log the response data!
+
+        if (!data || data.length === 0) { // Check for null or empty array
+            historyContent.innerHTML = "<p>No history found for this task.</p>";
+        } else {
+            data.forEach(entry => {
+                const div = document.createElement("div");
+                div.innerHTML = `<p><strong>${new Date(entry.time).toLocaleString()}</strong>: ${entry.changedAction}</p><hr>`;
+                historyContent.appendChild(div);
+            });
+        }
+        openHistoryModal();
+    }
+
+    function openHistoryModal() {
+        document.getElementById("historyModal").style.display = "flex";
+    }
+
+    function closeHistoryModal() {
+        document.getElementById("historyModal").style.display = "none";
     }
 
     fetchTasks();

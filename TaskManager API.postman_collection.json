@@ -8,6 +8,121 @@
 	},
 	"item": [
 		{
+			"name": "FIRST: Creating new User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"rayyan\",\r\n    \"password\": \"something\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SECOND: authenticate correct password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"password\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "THIRD: create task",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Style login form\",\r\n  \"description\": \"Add padding and color tweaks\",\r\n  \"priority\": \"LOW\",\r\n  \"completed\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/tasks/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tasks",
+						"create"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer ",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Tasks",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -18,7 +133,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTMyNywiaWF0IjoxNzQ2MDM5MzI3fQ.aSi0jB0Dij1mjFUUFL1PZDvGCDmx0VW7mrPRvCefi6Q",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -27,7 +142,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTMyNywiaWF0IjoxNzQ2MDM5MzI3fQ.aSi0jB0Dij1mjFUUFL1PZDvGCDmx0VW7mrPRvCefi6Q",
+						"value": "Bearer ",
 						"type": "text"
 					},
 					{
@@ -67,7 +182,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -97,7 +212,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -133,7 +248,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -173,7 +288,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -209,7 +324,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -245,7 +360,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -277,7 +392,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -301,63 +416,6 @@
 			"response": []
 		},
 		{
-			"name": "create task",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTMyNywiaWF0IjoxNzQ2MDM5MzI3fQ.aSi0jB0Dij1mjFUUFL1PZDvGCDmx0VW7mrPRvCefi6Q",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"Style login form\",\r\n  \"description\": \"Add padding and color tweaks\",\r\n  \"priority\": \"LOW\",\r\n  \"completed\": true\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/tasks/create",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tasks",
-						"create"
-					],
-					"query": [
-						{
-							"key": "Authorization",
-							"value": "Bearer \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTA4OSwiaWF0IjoxNzQ2MDM5MDg5fQ.OQYJUTbL670Ce0dY_dHLsH-1_lSVvovWCdM4UvoT4tQ\"",
-							"disabled": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Update Task by ID",
 			"request": {
 				"auth": {
@@ -365,7 +423,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA5NDg1NywiaWF0IjoxNzQ2MDU4ODU3fQ.GZTcZb6ybxse7yvUNev0cjRR0VghxxAlTmFclF9FAiA",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -396,41 +454,13 @@
 			"response": []
 		},
 		{
-			"name": "authenticate correct Pssword",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"password\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/authenticate",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"authenticate"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "authenticate Wrong Password",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"gvhjdfshgujdsfhgjb\"\r\n}",
+					"raw": "{\r\n    \"username\": \"wrongUsername\",\r\n    \"password\": \"SomeRandomPassword\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

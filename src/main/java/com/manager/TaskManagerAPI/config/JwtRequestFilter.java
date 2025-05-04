@@ -59,7 +59,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException
     {
         final String authHeader = request.getHeader(AUTH_HEADER);
-        logger.debug("Auth head: " + authHeader);
+        logger.debug("Auth head: {}", authHeader);
         String username = null;
         String jwt = null;
 

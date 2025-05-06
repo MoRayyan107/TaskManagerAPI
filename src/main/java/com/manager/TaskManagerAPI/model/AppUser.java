@@ -14,14 +14,25 @@ public class AppUser {
 
     private String username;
     private String password;
-    private String Role = ROLE_USER;
+    private String Role;
     private String firstName;
     private String lastName;
     private String email;
 
+    public AppUser() {}
+    public AppUser(String username, String password, String firstName, String lastName, String email) {
+        this.username = username;
+        this.password = password;
+        this.Role = ROLE_USER;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     // getters
     public Long getId() {return id;}
     public String getUsername() {return username;}
+    public String getPassword() {return password;}
     public String getRole() {return Role;}
     public String getFirstName() {return firstName;}
     public String getLastName() {return lastName;}
@@ -30,7 +41,6 @@ public class AppUser {
     // setters
     public void setId(Long id) {this.id = id;}
     public void setUsername(String username) {this.username = username;}
-    public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
     public void setRole(String Role) {this.Role = Role;}
     public void setFirstName(String firstName) {this.firstName = firstName;}

@@ -10,5 +10,5 @@ import java.util.List;
 public interface TaskHistoryRepository extends JpaRepository<TaskHistory, Long> {
 
     // geta the list of tasks history paged
-    List<TaskHistory> findTaskHistoriesByTaskId(Long tasId);
+    List<TaskHistory> findTaskHistoriesByTaskId(Long taskId);
 }

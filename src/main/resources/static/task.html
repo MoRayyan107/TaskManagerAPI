@@ -280,8 +280,8 @@
 
         if (!res.ok) {
             const errorMessage = await res.text();  //get the error message
-            console.error("Error fetching task history:", errorMessage);
-            historyContent.innerHTML = "<p>Failed to retrieve history.</p>";
+            console.error("No History for this task:", errorMessage);
+            historyContent.innerHTML = "<p>No History for this task.</p>";
             openHistoryModal();
             return;
         }

@@ -2,9 +2,13 @@ package com.manager.TaskManagerAPI.model;
 
 public class AuthenticationResponse {
 
-    private final String jwt;
+    private String jwt;
 
     public AuthenticationResponse(String jwt) {
+        this.jwt = jwt;
+    }
+
+    public void setJwt(String jwt) {
         this.jwt = jwt;
     }
 

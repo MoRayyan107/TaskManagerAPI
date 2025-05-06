@@ -20,4 +20,7 @@ public class CustomErrorMessages {
     public String getPath() {return path;}
     public int getStatus() {return status;}
     public LocalDateTime getDate() {return date;}
+
+    // testing purposes
+    public void setDate(LocalDateTime date) {this.date = date;}
 }

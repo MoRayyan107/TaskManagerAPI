@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import static com.manager.TaskManagerAPI.constants.AppConstants.ROLE_USER;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

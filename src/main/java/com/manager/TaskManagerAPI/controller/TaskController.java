@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.manager.TaskManagerAPI.constants.AppConstants.*;
 
@@ -126,9 +127,14 @@ public class TaskController {
     @Operation(summary = "updates the task by given ID (Authentication Required if using Postman)", description = "returns the task updated object")
     @PostMapping("/update/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task taskUpdate) {
-        Task task = service.updateTask(id, taskUpdate);
-        logger.info("Updated Task: {}", task);
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        try {
+            Task task = service.updateTask(id, taskUpdate);
+            logger.info("Updated Task: {}", task);
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            logger.error("Task not found for ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -139,9 +145,19 @@ public class TaskController {
     @Operation(summary = "deletes the task based on ID (Authentication Required if using Postman)", description = "returns nothing just a 200 OK message")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        service.deleteTask(id);
-        logger.info("Deleted Task: {}", id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            service.deleteTask(id);
+            logger.info("Deleted Task: {}", id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            logger.error("Task not found for ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.error("Error while deleting Task: {}", id);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            logger.info("Deleting Task: {}", id);
+        }
     }
 
     /**
@@ -165,9 +181,14 @@ public class TaskController {
     @Operation(summary = "finds the task by ID (Authentication Required if using Postman)", description = "return the task object from ID input")
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) {
-        Task task = service.getTaskById(id);
-        logger.info("Fetching Task: {}", task);
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        try {
+            Task task = service.getTaskById(id);
+            logger.info("Fetching Task: {}", task);
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            logger.error("Task not found for ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -178,8 +199,13 @@ public class TaskController {
     @Operation(summary = "History of changes for a particular task (Authentication Required if using Postman)", description = "returns a list of changes for a particular task")
     @GetMapping("/history/{id}")
     public ResponseEntity<List<TaskHistory>> taskHistoryPageable(@PathVariable Long id) {
-        List<TaskHistory> pagedTaskHistory = service.getTaskHistory(id);
-        return new ResponseEntity<>(pagedTaskHistory, HttpStatus.OK);
+        try {
+            List<TaskHistory> pagedTaskHistory = service.getTaskHistory(id);
+            return new ResponseEntity<>(pagedTaskHistory, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            logger.error("Task not found for ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

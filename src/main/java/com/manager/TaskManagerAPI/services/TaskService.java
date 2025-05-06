@@ -124,7 +124,7 @@ public class TaskService {
             changedAction.append("Task Priority changed to -> '").append(newTask.getPriority()).append("', ");
         }
         if (existingTask.isCompleted() != newTask.isCompleted()){
-            String completed = (newTask.isCompleted()) ? "Yes" : "No";
+            String completed = (newTask.isCompleted()) ? "Completed" : "Not Completed";
             changedAction.append("Task Completed changed to -> '").append(completed).append("'. ");
         }
 

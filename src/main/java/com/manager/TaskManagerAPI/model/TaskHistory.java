@@ -19,8 +19,8 @@ public class TaskHistory {
     private LocalDateTime time; // at what time it changed
 
     public TaskHistory() {}
-    public TaskHistory(Task task, String changedAction, LocalDateTime time) {
-        this.task = task;
+    public TaskHistory(Task UpdatedTask, String changedAction, LocalDateTime time) {
+        this.task = UpdatedTask;
         this.changedAction = changedAction;
         this.time = time;
     }

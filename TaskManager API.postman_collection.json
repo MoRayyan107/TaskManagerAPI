@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"rayyan\",\r\n    \"password\": \"something\"\r\n}",
+					"raw": "{\r\n  \"username\": \"johndoe\",\r\n  \"password\": \"secret123\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"john@example.com\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -44,7 +44,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"password\"\r\n}\r\n",
+					"raw": "{\r\n  \"username\": \"johndoe\",\r\n  \"password\": \"secret123\"\r\n}\r\n\r\n// make an post on Creating new User \r\n// after creating new user login through here and copy the \"KEY\"\r\n// paste it into Authorization tab (after Params)\r\n// auth token Bearer <token> ",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -52,14 +52,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/authenticate",
+					"raw": "http://localhost:8080/api/auth/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"authenticate"
+						"api",
+						"auth",
+						"login"
 					]
 				}
 			},
@@ -67,13 +69,16 @@
 		},
 		{
 			"name": "THIRD: create task",
+			"protocolProfileBehavior": {
+				"protocolVersion": "auto"
+			},
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -82,8 +87,9 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer ",
-						"type": "text"
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODkxNCwiaWF0IjoxNzQ2MzEyOTE0fQ.AWf-vsbQtv4Z2jdNuLHtTrAKqAw3sn3iM1-bklwlk5Y",
+						"type": "text",
+						"disabled": true
 					},
 					{
 						"key": "Content-Type",
@@ -93,7 +99,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"Style login form\",\r\n  \"description\": \"Add padding and color tweaks\",\r\n  \"priority\": \"LOW\",\r\n  \"completed\": true\r\n}\r\n",
+					"raw": "{\r\n  \"title\": \"Fix login bug\",\r\n  \"description\": \"This bug affects user login when network is slow\",\r\n  \"priority\": \"HIGH\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -101,20 +107,21 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/tasks/create",
+					"raw": "http://localhost:8080/api/tasks/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"create"
 					],
 					"query": [
 						{
 							"key": "Authorization",
-							"value": "Bearer ",
+							"value": "Bearer \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjA3NTA4OSwiaWF0IjoxNzQ2MDM5MDg5fQ.OQYJUTbL670Ce0dY_dHLsH-1_lSVvovWCdM4UvoT4tQ\"",
 							"disabled": true
 						}
 					]
@@ -133,7 +140,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -142,7 +149,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer ",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjMwODE2NywiZXhwIjoxNzQ2MzQ0MTY3fQ.JI7m7eIAqWOE9x-rkR6mMkp0Dps8MAsEWYv3LoAUNXQ",
 						"type": "text"
 					},
 					{
@@ -161,14 +168,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/tasks",
+					"raw": "http://localhost:8080/api/tasks/allTasks",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"tasks"
+						"api",
+						"tasks",
+						"allTasks"
 					]
 				}
 			},
@@ -182,7 +191,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -190,15 +199,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tasks/2",
+					"raw": "http://localhost:8080/api/tasks/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -212,7 +222,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -220,20 +230,21 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tasks/search?title=TaskName",
+					"raw": "http://localhost:8080/api/tasks/search?title=rwgr",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"search"
 					],
 					"query": [
 						{
 							"key": "title",
-							"value": "TaskName"
+							"value": "rwgr"
 						}
 					]
 				}
@@ -248,7 +259,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -256,13 +267,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tasks/page?page=0&size=5",
+					"raw": "http://localhost:8080/api/tasks/page?page=0&size=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"page"
 					],
@@ -288,7 +300,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -296,20 +308,21 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tasks/search?title=Meeting",
+					"raw": "http://localhost:8080/api/tasks/search?title=rwgr",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"search"
 					],
 					"query": [
 						{
 							"key": "title",
-							"value": "Meeting"
+							"value": "rwgr"
 						}
 					]
 				}
@@ -324,7 +337,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -332,20 +345,21 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tasks/priority?priority=HIGH",
+					"raw": "http://localhost:8080/api/tasks/priority?priority=LOW",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"priority"
 					],
 					"query": [
 						{
 							"key": "priority",
-							"value": "HIGH"
+							"value": "LOW"
 						}
 					]
 				}
@@ -360,7 +374,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
@@ -368,13 +382,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tasks/history/1/page",
+					"raw": "http://localhost:8080/api/tasks/history/1/page",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"history",
 						"1",
@@ -392,24 +407,36 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjI5NTk1NCwiZXhwIjoxNzQ2MzMxOTU0fQ.0yt6L5xMNFQU1asoyvnBpSJJC4bufGJO1ep0fu2jaKs",
 							"type": "string"
 						}
 					]
 				},
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjI5NTk1NCwiZXhwIjoxNzQ2MzMxOTU0fQ.0yt6L5xMNFQU1asoyvnBpSJJC4bufGJO1ep0fu2jaKs",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:8080/tasks/delete/3",
+					"raw": "http://localhost:8080/api/tasks/delete/7",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"delete",
-						"3"
+						"7"
 					]
 				}
 			},
@@ -423,24 +450,34 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NjM0ODk4OSwiaWF0IjoxNzQ2MzEyOTg5fQ.ujId7heNWzb4ZtZpgdwYiRPKKN24KfMQ8MqxY1QLtEM",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"title\": \"Dashboard redesign\",\r\n        \"description\": \"Update layout with new branding guidelines\",\r\n        \"completed\": false,\r\n        \"priority\": \"MEDIUM\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8080/tasks/update/6",
+					"raw": "http://localhost:8080/api/tasks/update/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
 						"tasks",
 						"update",
-						"6"
+						"1"
 					],
 					"query": [
 						{
@@ -460,7 +497,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"wrongUsername\",\r\n    \"password\": \"SomeRandomPassword\"\r\n}",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"gvhjdfshgujdsfhgjb\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -468,14 +505,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/authenticate",
+					"raw": "http://localhost:8080/api/auth/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"authenticate"
+						"api",
+						"auth",
+						"login"
 					]
 				}
 			},

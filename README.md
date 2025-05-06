@@ -130,11 +130,55 @@ From this page, all task API calls (create, update, delete, mark complete/incomp
      "username": "admin",
      "password": "password"
    }
-    
-   Return Body:
+   ```
+   - Return Body:
+   ```json
    {
-     "jwt": "YTjkUY4HJ67......." <- JWT token 
+     "jwt": "YTjkUY4HJ67......." 
    }
+   ```
+---
+##  🗂️ Project Structure  
+
+````aiignore
+TaskManagerAPI/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com.manager.TaskManagerAPI/
+│   │   │       ├── config/                 # JWT filter, security configs, Swagger setup
+│   │   │       ├── constants/              # App-wide constants (e.g., static messages)
+│   │   │       ├── controller/             # REST controllers (Auth, Task, Frontend)
+│   │   │       ├── ErrorMessages/          # Custom error messages & global exception handler
+│   │   │       ├── model/                  # Entity classes (User, Task, Request/Response DTOs)
+│   │   │       ├── repository/             # Spring Data JPA Repositories
+│   │   │       ├── services/               # Business logic (Auth, Task, UserDetailService)
+│   │   │       └── Util/                   # JWT utility helper
+│   │   └── resources/
+│   │       ├── static/
+│   │       │   ├── css/                    # style.css
+│   │       │   └── js/                     # login.js, task.js
+│   │       ├── login.html
+│   │       ├── register.html
+│   │       └── task.html
+│   └── test/
+│       └── java/
+│           └── com.manager.TaskManagerAPI/
+│               ├── controller/            # Unit tests for Auth & Task Controllers
+│               ├── ErrorMessages/         # Tests for custom error logic
+│               ├── model/                 # Entity-related unit tests
+│               ├── services/              # Service-level tests (Task, Auth)
+│               └── Util/                  # JWT utility tests
+│
+├── application.properties                 # App config
+├── pom.xml                                # Project dependencies
+├── README.md                              # Project overview & setup instructions
+├── LICENSE, .gitignore, .gitattributes    # Standard project files
+├── TaskManager API.postman_collection.json # Postman collection for API testing
+├── LayoutGrid.png                         # Optional: layout wireframe
+
+````
+
 ---
 
 ## 🙌 Credits

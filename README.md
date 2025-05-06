@@ -2,7 +2,7 @@
 
 ## 📌 Project Description
 The Task Manager API is a secure, scalable backend service built with **Java + Spring Boot** that helps users manage their tasks with proper **authentication and authorization**.  
-This RESTful API supports **CRUD operations**, **pagination**, **task history logging**, and uses **JWT tokens** to protect routes.
+This RESTful API supports **CRUD operations**, **task completion toggling**, **task history logging**, and uses **JWT tokens** to protect routes.
 
 ---
 
@@ -17,9 +17,9 @@ This RESTful API supports **CRUD operations**, **pagination**, **task history lo
 
 ## 🔐 Authentication
 - Uses Spring Security 6+
-- Secure login via `/authenticate` endpoint
+- Secure login via `api/auth/login` endpoint
 - Generates and validates JWT tokens
-- Protects all routes except `/authenticate`
+- Protects all routes except `api/auth/**`, `Swagger UI`, `/login.html` and `/register.html`
 
 🧾 Add your token to headers:  
 `Authorization: Bearer <your-token-here>`
@@ -44,7 +44,7 @@ This RESTful API supports **CRUD operations**, **pagination**, **task history lo
 - ✅ User Login + JWT Token
 - ✅ Create a task
 - ✅ Update a task (with task history tracking)
-- 📃 List all tasks (with pagination & sorting)
+- 📃 List all tasks (simple list, no pagination)
 - ✅ Mark a task as completed or incomplete
 - ❌ Delete a task
 - 📜 View task history logs by task ID
@@ -56,17 +56,18 @@ The frontend is built using plain **HTML5 + CSS3**, served from the `/static` di
 
 - 🧱 Grid layout: max 3 task cards per row
 - ✅ Each task is shown in a **card box** with:
-  - Title (heading)
-  - Description
-  - Priority badge
-  - Color-coded bottom bar for LOW / MEDIUM / HIGH
+    - Title (heading)
+    - Description
+    - Priority badge
+    - Color-coded bottom bar for LOW / MEDIUM / HIGH
 - 🧰 Actions:
-  - “Mark Complete” / “Mark Incomplete”
-  - “Delete”
+    - “Mark Complete” / “Mark Incomplete”
+    - “Delete”
+    - "Edit"
 - 🎨 Color Legend:
-  - 🔴 High = Red  
-  - 🟠 Medium = Orange  
-  - 🟢 Low = Green
+    - 🔴 High = Red
+    - 🟠 Medium = Orange
+    - 🟢 Low = Green
 - 🌀 Auto-refresh after every update without scrolling to top
 
 ---
@@ -74,45 +75,69 @@ The frontend is built using plain **HTML5 + CSS3**, served from the `/static` di
 ## 📦 Getting Started
 1. Clone the repository
 2. Open in IntelliJ or your preferred IDE
-3. Run `TaskManagerApiApplication.java`
-4. Use Postman to:
-    - Send login request to `/authenticate`
-    - Use the returned JWT to access `/tasks`
+3. Run `TaskManagerApiApplication.java` 
+4. You can use this app in two ways:
+
+### 🔁 Option 1: Using Postman
+
+- **Register**:  
+  `POST /api/auth/register`
+
+- **Login**:  
+  `POST /api/auth/login`  
+  This returns a JWT token.
+
+- For all subsequent requests (e.g., `/api/tasks/**`), add the JWT in **Postman's Authorization tab**:
+    - Type: `Bearer Token`
+    - Token: `<your JWT token here>`
+
+### 🌐 Option 2: Using Browser (Demo Frontend)
+
+1. **Register** by visiting:  
+   `http://localhost:8080/register.html`  
+   This will create a new user in the system.
+
+2. **Login** at:  
+   `http://localhost:8080/login.html`  
+   After logging in successfully, the app will:
+    - Generate a JWT
+    - Store it in browser memory
+    - Redirect you to:  
+      `http://localhost:8080/tasks-page.html`
+
+From this page, all task API calls (create, update, delete, mark complete/incomplete) will be authorized using the stored JWT behind the scenes — no Postman or manual headers required.
+
 
 ---
 
 ## 🔐 Example Auth Flow (Postman)
-1. **Login**
-    - POST `/authenticate`
+1. **Register**
+   - POST `/api/auth/register`
+   - Body: 
+   ```json
+   {
+     "username": "admin",
+     "password": "password",
+     "firstName": "John",
+     "lastName": "Doe",
+     "email": "john@example.com"
+   }
+2. **Login**
+    - POST `/api/auth/login`
     - Body:
    ```json
    {
      "username": "admin",
      "password": "password"
    }
-   ```
-
-2. **Authorized Request**
-    - Add header: `Authorization: Bearer <jwt_token>`
-    - Access `/tasks`, `/tasks/create`, etc.
-
----
-
-## ✨ Upcoming Features
-- [ ] Add inline **Edit** button per task (top-right of card)
-- [ ] Add pagination (limit 6–9 tasks per page)
-- [ ] Task history modal or viewer section
-- [ ] Toast/success messages for actions
-- [ ] Filter caching to reduce reload hits
-- [ ] Dockerize + Deploy-ready packaging
-
----
-
-## 📂 Project Status
-🟢 Actively being developed  
-📅 Last updated: 2025-05-02
-
+    
+   Return Body:
+   {
+     "jwt": "YTjkUY4HJ67......." <- JWT token 
+   }
 ---
 
 ## 🙌 Credits
-Developed by **Mohammad Rayyan**
+Developed by **Mohammad Rayyan**  
+🧠 **Backend Developer** — focused on designing the Spring Boot API, secure architecture, and system logic.  
+🎨 The frontend was scaffolded using **GenAI tools** and kept minimal, primarily for demonstration purposes.

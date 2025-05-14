@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -60,6 +59,7 @@ class TaskControllerTest {
         mock.perform(post("/api/tasks/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(task.toString()))
+                .andDo(print())
                 .andExpectAll(
                         status().isCreated(),
                         jsonPath("$.title").value("Some Random Task")
@@ -81,6 +81,7 @@ class TaskControllerTest {
         mock.perform(post("/api/tasks/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidTaskJson))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -93,6 +94,7 @@ class TaskControllerTest {
         // ac and assert
         mock.perform(get("/api/tasks/allTasks")
                         .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(2),
@@ -109,6 +111,7 @@ class TaskControllerTest {
         // act and assert
         mock.perform(get("/api/tasks/allTasks")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(0)
@@ -125,6 +128,7 @@ class TaskControllerTest {
         mock.perform(get("/api/tasks/search")
                 .param("title", "Some")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(1),
@@ -146,6 +150,7 @@ class TaskControllerTest {
         mock.perform(get("/api/tasks/search")
                 .param("title", "Non-existingTask")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
                 //Indicating nothing in JSON
@@ -160,6 +165,7 @@ class TaskControllerTest {
         // act and assert
         mock.perform(get("/api/tasks/{id}",2L)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.title").value("Some Random Task2"),
@@ -177,6 +183,7 @@ class TaskControllerTest {
         // act and assert
         mock.perform(get("/api/tasks/{id}",4L)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
@@ -190,6 +197,7 @@ class TaskControllerTest {
         mock.perform(get("/api/tasks/sorted")
                         .param("sort", "title")
                         .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(2),
@@ -207,6 +215,7 @@ class TaskControllerTest {
         // act and assert
         mock.perform(get("/api/tasks/sorted")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.size()").value(0)
@@ -221,6 +230,7 @@ class TaskControllerTest {
         // act and assert
         mock.perform(delete("/api/tasks/delete/{id}",2L)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
@@ -232,6 +242,7 @@ class TaskControllerTest {
         // act and assert
         mock.perform(delete("/api/tasks/delete/{id}",2L)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
@@ -255,6 +266,7 @@ class TaskControllerTest {
                         "completed": true
                     }
                     """))
+                .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         jsonPath("$.title").value("CS208 Exam"),
@@ -280,6 +292,7 @@ class TaskControllerTest {
                         "completed": true
                     }
                     """))
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 

@@ -25,14 +25,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // disable the csrf configuration
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**",
-                                "/login.html", "/task.html", "/register.html",
-                                "/css/**", "/js/**",
-                                "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/login.html", "/task.html", "/lregister.htm", "/register.html",
+                                "/css/**", "/js/**", "/images/**", "/fonts/**", "/webjars/**",
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                                "/h2-console/**"  // Keep this if using H2
+                        ).permitAll()
                         .anyRequest().authenticated()
-                ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // For H2 console or if you need to allow frames
+        http.headers(headers -> headers
+                .contentSecurityPolicy(csp -> csp
+                        .policyDirectives("frame-ancestors 'self'") // or "frame-ancestors *" for all
+                )
+        );
 
         return http.build();
     }
